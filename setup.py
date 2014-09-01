@@ -8,6 +8,7 @@ version = '1.0.0.dev0'
 tests_require = [
     'ftw.builder',
     'ftw.testbrowser',
+    'ftw.testing',
     'plone.app.testing',
     ]
 
@@ -40,6 +41,7 @@ setup(name='ftw.activity',
       install_requires=[
         'Plone',
         'collective.lastmodifier',
+        'collective.prettydate',
         'ftw.avatar',
         'setuptools',
         ],
