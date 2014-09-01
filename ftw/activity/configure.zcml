@@ -1,10 +1,15 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="ftw.activity">
 
   <five:registerPackage package="." initialize=".initialize" />
+
+  <browser:resourceDirectory
+      name="ftw.activity"
+      directory="resources" />
 
   <genericsetup:registerProfile
       name="default"
