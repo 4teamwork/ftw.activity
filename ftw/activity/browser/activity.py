@@ -1,10 +1,23 @@
 from ftw.activity.interfaces import IActivityRepresentation
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import getMultiAdapter
 
 
 class ActivityView(BrowserView):
+
+    activity_template = ViewPageTemplateFile('templates/activity.pt')
+    events_template = ViewPageTemplateFile('templates/events.pt')
+
+    def __call__(self):
+        return self.activity_template()
+
+    def fetch(self):
+        """Action for retrieving more events (based on `last_uid` in
+        the request) with AJAX.
+        """
+        return self.events_template()
 
     def events(self, amount=20, last_uid=None):
         last_uid = last_uid or self.request.get('last_uid', None)

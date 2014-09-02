@@ -7,6 +7,7 @@ from ftw.builder import Builder
 from ftw.builder import create
 from ftw.testbrowser import browsing
 from ftw.testing import freeze
+from operator import attrgetter
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from unittest2 import TestCase
@@ -45,6 +46,18 @@ class TestActivityView(TestCase):
                 'test_user_1_ has modified Folder yesterday',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
+
+    @browsing
+    def test_fetch_more_events(self, browser):
+        pages = [create(Builder('page').titled('Zero')),
+                 create(Builder('page').titled('One')),
+                 create(Builder('page').titled('Two')),
+                 create(Builder('page').titled('Three'))]
+
+        start_after = pages[1].UID()
+        browser.login().open(view='activity?last_uid={}'.format(start_after))
+        self.assertEquals(['Two', 'Three'],
+                          map(attrgetter('title'), activity.events()))
 
     @browsing
     def test_events_are_filtered_and_batched(self, browser):

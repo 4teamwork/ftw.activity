@@ -9,9 +9,7 @@
       <div class="activity">
         <div class="events">
 
-          <tal:EVENTS repeat="repr view/events">
-            <div class="event" tal:content="structure repr/render" />
-          </tal:EVENTS>
+          <tal:EVENTS tal:replace="structure view/fetch" />
 
         </div>
       </div>

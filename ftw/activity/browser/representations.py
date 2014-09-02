@@ -2,6 +2,7 @@ from collective.lastmodifier.interfaces import ILastModifier
 from collective.prettydate.interfaces import IPrettyDate
 from ftw.activity import _
 from ftw.activity.interfaces import IActivityRepresentation
+from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import adapts
@@ -65,3 +66,6 @@ class DefaultRepresentation(object):
         return {
             'relative': date_utility.date(self.context.modified()),
             'absolute': self.context.modified()}
+
+    def uid(self):
+        return IUUID(self.context)

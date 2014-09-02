@@ -1,0 +1,9 @@
+<tal:DOMAIN i18n:domain="ftw.activity">
+
+  <tal:EVENTS repeat="repr view/events">
+    <div class="event"
+         tal:attributes="data-uid repr/uid"
+         tal:content="structure repr/render" />
+  </tal:EVENTS>
+
+</tal:DOMAIN>

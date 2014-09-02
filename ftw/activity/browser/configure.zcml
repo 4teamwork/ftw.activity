@@ -8,7 +8,7 @@
       name="activity"
       class=".activity.ActivityView"
       permission="zope2.View"
-      template="templates/activity.pt"
+      allowed_attributes="fetch"
       />
 
   <browser:page
