@@ -17,18 +17,16 @@ msgstr ""
 #. Default: "${actor} has ${action} ${portal_type} ${when}"
 #: ./ftw/activity/browser/templates/activity_macros.pt:31
 msgid "byline_text"
-msgstr ""
+msgstr "${actor} has ${action} ${portal_type} ${when}"
 
 #: ./ftw/activity/browser/representations.py:60
 msgid "created"
-msgstr ""
+msgstr "created"
 
 #: ./ftw/activity/browser/representations.py:62
 msgid "modified"
-msgstr ""
+msgstr "modified"
 
 #: ./ftw/activity/browser/templates/activity.pt:10
 msgid "more_link_label"
-msgstr ""
-
-
+msgstr "More"

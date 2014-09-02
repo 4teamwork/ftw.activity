@@ -7,7 +7,8 @@
     <metal:main fill-slot="main">
 
       <div class="activity">
-        <div class="events">
+        <div class="events"
+             i18n:attributes="data-more-label more_link_label">
 
           <tal:EVENTS tal:replace="structure view/fetch" />
 

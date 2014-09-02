@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-09-02 06:49+0000\n"
+"POT-Creation-Date: 2014-09-02 16:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,3 +26,9 @@ msgstr "erstellt"
 #: ./ftw/activity/browser/representations.py:62
 msgid "modified"
 msgstr "verändert"
+
+#: ./ftw/activity/browser/templates/activity.pt:10
+msgid "more_link_label"
+msgstr "Mehr"
+
+

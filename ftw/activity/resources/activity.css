@@ -15,3 +15,17 @@
   font-weight: bold;
   font-size: 150%;
 }
+
+.activity a.more-button {
+  display: block;
+  text-align: center;
+  padding: 0.5em;
+  border: 1px solid #DDD;
+  background-color: #EEE;
+  border-radius: 0.4em;
+}
+
+.activity a.more-button:hover {
+  background-color: #DEF;
+  border-color: #ABC;
+}
