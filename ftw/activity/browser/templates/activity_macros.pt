@@ -29,6 +29,7 @@
             i18n:domain="plone" />
 
       <span class="when"
+            i18n:name="when"
             tal:define="when view/when"
             tal:content="when/relative"
             tal:attributes="title python:here.toLocalizedTime(when['absolute'], long_format=True)"/>

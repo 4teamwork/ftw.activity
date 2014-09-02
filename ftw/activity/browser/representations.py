@@ -1,4 +1,5 @@
 from collective.prettydate.interfaces import IPrettyDate
+from ftw.activity import _
 from ftw.activity.interfaces import IActivityRepresentation
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -12,7 +13,8 @@ class DefaultRepresentation(object):
     implements(IActivityRepresentation)
     adapts(Interface, Interface)
 
-    index = ViewPageTemplateFile('templates/default_representation.pt')
+    index = ViewPageTemplateFile(
+        'templates/default_representation.pt')
 
     def __init__(self, context, request):
         self.context = context
@@ -41,7 +43,8 @@ class DefaultRepresentation(object):
         return {
             'url': mtool.getHomeUrl(member.getId()),
             'portrait_url': self.portrait_url(last_modifier),
-            'fullname': member.getProperty('fullname') or member.getId(),
+            'fullname': member.getProperty('fullname') or \
+                member.getId(),
             'member': member}
 
     def get_last_modifier(self):
@@ -49,18 +52,17 @@ class DefaultRepresentation(object):
         return field.getAccessor(self.context)()
 
     def action(self):
-        # modified and created are not exactly equal, so we only compare
-        # down to the second:
+        # modified and created are not exactly equal,
+        # so we only compare down to the second:
         modified = self.context.modified().asdatetime().timetuple()
         created = self.context.created().asdatetime().timetuple()
         if modified == created:
-            # XXX translate
-            return 'created'
+            return _('created')
         else:
-            # XXX translate
-            return 'modified'
+            return _('modified')
 
     def when(self):
         date_utility = getUtility(IPrettyDate)
-        return {'relative': date_utility.date(self.context.modified()),
-                'absolute': self.context.modified()}
+        return {
+            'relative': date_utility.date(self.context.modified()),
+            'absolute': self.context.modified()}
