@@ -3,6 +3,11 @@
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="ftw.activity">
 
+  <head>
+    <metal:block fill-slot="top_slot"
+                 tal:define="dummy python:request.set('disable_border',1)" />
+  </head>
+
   <body>
     <metal:main fill-slot="main">
 
