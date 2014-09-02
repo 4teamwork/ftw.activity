@@ -1,3 +1,4 @@
+from collective.lastmodifier.interfaces import ILastModifier
 from collective.prettydate.interfaces import IPrettyDate
 from ftw.activity import _
 from ftw.activity.interfaces import IActivityRepresentation
@@ -21,7 +22,6 @@ class DefaultRepresentation(object):
         self.request = request
 
     def visible(self):
-        # XXX
         return bool(self.get_last_modifier())
 
     def render(self):
@@ -48,8 +48,7 @@ class DefaultRepresentation(object):
             'member': member}
 
     def get_last_modifier(self):
-        field = self.context.getField('lastModifier')
-        return field.getAccessor(self.context)()
+        return ILastModifier(self.context).get()
 
     def action(self):
         # modified and created are not exactly equal,
