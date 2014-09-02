@@ -1,3 +1,4 @@
+from collective.lastmodifier.interfaces import ILastModifier
 from datetime import datetime
 from datetime import timedelta
 from ftw.activity.testing import FUNCTIONAL_TESTING
@@ -44,3 +45,22 @@ class TestActivityView(TestCase):
                 'test_user_1_ has modified Folder yesterday',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
+
+    @browsing
+    def test_events_are_filtered_and_batched(self, browser):
+        pages = []
+        for index in range(6):
+            pages.append(create(Builder('page')
+                                .titled('Page {0}'.format(index))))
+
+        ILastModifier(pages[1]).set(None)
+        view = self.layer['portal'].restrictedTraverse('@@activity')
+
+        get_title = lambda repr: repr.context.Title()
+
+        self.assertEquals(['Page 0', 'Page 2', 'Page 3'],
+                          map(get_title, view.events(amount=3)))
+
+        self.assertEquals(['Page 4', 'Page 5'],
+                          map(get_title,
+                              view.events(amount=3, last_uid=pages[3].UID())))
