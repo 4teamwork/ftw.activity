@@ -7,6 +7,8 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
+  <include package=".browser" />
+
   <browser:resourceDirectory
       name="ftw.activity"
       directory="resources" />

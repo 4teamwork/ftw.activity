@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="ftw.activity">
+
+  <body>
+    <metal:main fill-slot="main">
+
+      <div class="activity">
+        <div class="events">
+
+          <tal:EVENTS repeat="repr view/events">
+            <div class="event" tal:content="structure repr/render" />
+          </tal:EVENTS>
+
+        </div>
+      </div>
+
+    </metal:main>
+  </body>
+</html>

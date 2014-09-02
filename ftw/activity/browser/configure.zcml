@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="ftw.activity">
+
+  <browser:page
+      for="*"
+      name="activity"
+      class=".activity.ActivityView"
+      permission="zope2.View"
+      template="templates/activity.pt"
+      />
+
+  <browser:page
+      for="*"
+      name="activity_macros"
+      permission="zope2.View"
+      template="templates/activity_macros.pt"
+      />
+
+  <adapter factory=".representations.DefaultRepresentation" />
+
+</configure>

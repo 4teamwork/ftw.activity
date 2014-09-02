@@ -1,0 +1,52 @@
+<metal:wrapper define-macro="event" i18n:domain="ftw.activity"
+               tal:define="actor view/actor">
+
+  <div class="avatar">
+    <metal:AVATAR metal:define-slot="avatar">
+      <img width="50" height="50"
+           tal:attributes="src string:${actor/portrait_url}?size=50" />
+    </metal:AVATAR>
+  </div>
+
+  <div class="byline">
+    <metal:BYLINE metal:define-slot="byline"
+                  i18n:translate="byline_text">
+      <span i18n:name="actor" class="actor">
+        <a tal:attributes="href actor/url"
+           tal:omit-tag="not:actor/url"
+           tal:content="actor/fullname" />
+      </span>
+      has
+      <span class="action"
+            i18n:name="action"
+            tal:content="view/action"
+            i18n:translate=""/>
+
+      <span class="portal_type"
+            i18n:name="portal_type"
+            tal:content="context/portal_type"
+            i18n:translate=""
+            i18n:domain="plone" />
+
+      <span class="when"
+            tal:define="when view/when"
+            tal:content="when/relative"
+            tal:attributes="title python:here.toLocalizedTime(when['absolute'], long_format=True)"/>
+    </metal:BYLINE>
+  </div>
+
+  <div class="body">
+    <metal:BODY metal:define-slot="body">
+      <metal:TITLE metal:define-slot="body-title">
+        <div class="title">
+          <a tal:attributes="href context/absolute_url"
+             tal:content="context/Title" />
+        </div>
+      </metal:TITLE>
+
+      <metal:CONTENT metal:define-slot="body-content" />
+    </metal:BODY>
+  </div>
+
+  <div class="visualClear"></div>
+</metal:wrapper>

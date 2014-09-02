@@ -1,0 +1,17 @@
+.activity .event {
+  padding: 1em;
+}
+
+.activity .event:hover {
+  background-color: #EDF6F7;
+}
+
+.activity .event .avatar {
+  float: left;
+  margin-right: 1em;
+}
+
+.activity .event .body .title {
+  font-weight: bold;
+  font-size: 150%;
+}
