@@ -1,4 +1,4 @@
-(function($) {$(function() {
+(function($) {$(document).on('ready reload', function() {
 
   var events = $('.activity .events');
   if(events.length === 0) {

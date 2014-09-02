@@ -8,6 +8,7 @@ from zope.component import getMultiAdapter
 class ActivityView(BrowserView):
 
     activity_template = ViewPageTemplateFile('templates/activity.pt')
+    raw = ViewPageTemplateFile('templates/activity_raw.pt')
     events_template = ViewPageTemplateFile('templates/events.pt')
 
     def __call__(self):

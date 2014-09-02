@@ -1,0 +1,12 @@
+<tal:DOMAIN i18n:domain="ftw.activity">
+
+  <div class="activity">
+    <div class="events"
+         i18n:attributes="data-more-label more_link_label">
+
+      <tal:EVENTS tal:replace="structure view/fetch" />
+
+    </div>
+  </div>
+
+</tal:DOMAIN>

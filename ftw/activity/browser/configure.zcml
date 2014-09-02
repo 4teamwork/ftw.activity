@@ -13,6 +13,13 @@
 
   <browser:page
       for="*"
+      name="tabbedview_view-activity"
+      class=".tab.ActivityTab"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      for="*"
       name="activity_macros"
       permission="zope2.View"
       template="templates/activity_macros.pt"
