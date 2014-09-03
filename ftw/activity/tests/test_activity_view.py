@@ -61,10 +61,12 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_events_are_filtered_and_batched(self, browser):
+        now = datetime(2010, 12, 28, 10, 35)
         pages = []
         for index in range(6):
-            pages.append(create(Builder('page')
-                                .titled('Page {0}'.format(index))))
+            with freeze(now - timedelta(hours=index)):
+                pages.append(create(Builder('page')
+                                    .titled('Page {0}'.format(index))))
 
         ILastModifier(pages[1]).set(None)
         view = self.layer['portal'].restrictedTraverse('@@activity')
