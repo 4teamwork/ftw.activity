@@ -27,7 +27,8 @@ class ActivityView(BrowserView):
         """
         return self.raw_template()
 
-    def events(self, amount=10, last_uid=None):
+    def events(self, amount=None, last_uid=None):
+        amount = amount or self.request.get('amount_of_events', 10)
         last_uid = last_uid or self.request.get('last_uid', None)
         brains = self._lookup()
         if last_uid:
