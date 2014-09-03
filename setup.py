@@ -42,7 +42,6 @@ setup(name='ftw.activity',
         'Plone',
         'collective.lastmodifier',
         'collective.prettydate',
-        'ftw.avatar',
         'setuptools',
         ],
 

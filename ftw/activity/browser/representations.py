@@ -34,9 +34,8 @@ class DefaultRepresentation(object):
         portrait = mtool.getPersonalPortrait(member_id)
         if portrait is not None:
             return portrait.absolute_url()
-        utool = getToolByName(self.context, 'portal_url')
-        # XXX
-        return '%s/defaultUser.png' % utool()
+        else:
+            return ''
 
     def actor(self):
         last_modifier = self.get_last_modifier()
