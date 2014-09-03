@@ -11,26 +11,28 @@
   <div class="byline">
     <metal:BYLINE metal:define-slot="byline"
                   i18n:translate="byline_text">
-      <span i18n:name="actor" class="actor">
-        <a tal:attributes="href actor/url"
-           tal:omit-tag="not:actor/url"
-           tal:content="actor/fullname" />
-      </span>
-      has
+      <span class="portal_type"
+            i18n:name="portal_type"
+            tal:content="view/portal_type" />
+
       <span class="action"
             i18n:name="action"
             tal:content="view/action"
             i18n:translate=""/>
-
-      <span class="portal_type"
-            i18n:name="portal_type"
-            tal:content="view/portal_type" />
 
       <span class="when"
             i18n:name="when"
             tal:define="when view/when"
             tal:content="when/relative"
             tal:attributes="title python:here.toLocalizedTime(when['absolute'], long_format=True)"/>
+
+      by
+
+      <span i18n:name="actor" class="actor">
+        <a tal:attributes="href actor/url"
+           tal:omit-tag="not:actor/url"
+           tal:content="actor/fullname" />
+      </span>
     </metal:BYLINE>
   </div>
 

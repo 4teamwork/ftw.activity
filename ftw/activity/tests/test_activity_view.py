@@ -38,12 +38,12 @@ class TestActivityView(TestCase):
 
             page_event, folder_event = activity.events()
             self.assertEquals(
-                'test_user_1_ has created Document an hour ago',
+                'Document created an hour ago by test_user_1_',
                 page_event.byline)
             self.assertEquals('The First Page', page_event.title)
 
             self.assertEquals(
-                'test_user_1_ has modified Folder yesterday',
+                'Folder modified yesterday by test_user_1_',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
 
