@@ -8,7 +8,7 @@ from zope.component import getMultiAdapter
 class ActivityView(BrowserView):
 
     activity_template = ViewPageTemplateFile('templates/activity.pt')
-    raw = ViewPageTemplateFile('templates/activity_raw.pt')
+    raw_template = ViewPageTemplateFile('templates/activity_raw.pt')
     events_template = ViewPageTemplateFile('templates/events.pt')
 
     def __call__(self):
@@ -19,6 +19,13 @@ class ActivityView(BrowserView):
         the request) with AJAX.
         """
         return self.events_template()
+
+    def raw(self):
+        """Action for embedding activity stream into another view.
+        The returned HTML does not contain a complete page with
+        head / body but only the stream fragment.
+        """
+        return self.raw_template()
 
     def events(self, amount=10, last_uid=None):
         last_uid = last_uid or self.request.get('last_uid', None)

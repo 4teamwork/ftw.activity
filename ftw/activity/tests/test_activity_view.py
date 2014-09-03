@@ -52,6 +52,13 @@ class TestActivityView(TestCase):
             self.assertEquals(folder.absolute_url(), folder_event.url)
 
     @browsing
+    def test_raw_action_is_public(self, browser):
+        create(Builder('folder'))
+        browser.login().open(view='activity')
+        self.assertEquals(1, len(activity.events()),
+                          'Expected exactly one event')
+
+    @browsing
     def test_fetch_more_events(self, browser):
         pages = [create(Builder('page').titled('Zero')),
                  create(Builder('page').titled('One')),
