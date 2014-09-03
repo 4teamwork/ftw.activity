@@ -7,6 +7,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import adapts
 from zope.component import getUtility
+from zope.i18n import translate
 from zope.interface import implements
 from zope.interface import Interface
 
@@ -50,6 +51,17 @@ class DefaultRepresentation(object):
 
     def get_last_modifier(self):
         return ILastModifier(self.context).get()
+
+    def portal_type(self):
+        portal_types = getToolByName(self.context, 'portal_types')
+        fti = portal_types.get(self.context.portal_type, None)
+        default = translate(self.context.portal_type, domain='plone',
+                            context=self.request)
+        if fti:
+            return translate(fti.title, domain=fti.i18n_domain,
+                             default=default,
+                             context=self.request)
+        return default
 
     def action(self):
         # modified and created are not exactly equal,

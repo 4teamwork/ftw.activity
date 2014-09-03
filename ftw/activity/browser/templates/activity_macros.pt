@@ -24,9 +24,7 @@
 
       <span class="portal_type"
             i18n:name="portal_type"
-            tal:content="context/portal_type"
-            i18n:translate=""
-            i18n:domain="plone" />
+            tal:content="view/portal_type" />
 
       <span class="when"
             i18n:name="when"
