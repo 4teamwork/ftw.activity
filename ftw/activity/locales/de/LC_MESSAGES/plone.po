@@ -16,5 +16,3 @@ msgstr ""
 
 msgid "activity"
 msgstr "Aktivität"
-
-

@@ -42,6 +42,7 @@ setup(name='ftw.activity',
         'Plone',
         'collective.lastmodifier >= 1.1.0',
         'collective.prettydate',
+        'ftw.upgrade',
         'setuptools',
         ],
 

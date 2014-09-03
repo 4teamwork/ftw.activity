@@ -6,18 +6,20 @@ from ftw.activity.tests.pages import activity
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.testbrowser import browsing
+from ftw.testbrowser.pages import plone
 from ftw.testing import freeze
 from operator import attrgetter
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from unittest2 import TestCase
+import transaction
 
 
 class TestActivityView(TestCase):
     layer = FUNCTIONAL_TESTING
 
     def setUp(self):
-        setRoles(self.layer['portal'], TEST_USER_ID, ['Contributor'])
+        setRoles(self.layer['portal'], TEST_USER_ID, ['Manager'])
 
     @browsing
     def test_shows_created_and_modified_objects(self, browser):
@@ -50,6 +52,13 @@ class TestActivityView(TestCase):
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
             self.assertEquals(folder.absolute_url(), folder_event.url)
+
+    @browsing
+    def test_editable_border_is_hidden(self, browser):
+        browser.login().visit(view='activity')
+        self.assertEquals('activity', plone.view())
+        self.assertFalse(browser.css('.documentEditable'),
+                         'Editable border is visible')
 
     @browsing
     def test_raw_action_is_public(self, browser):
@@ -90,3 +99,40 @@ class TestActivityView(TestCase):
         self.assertEquals(['Page 4', 'Page 5'],
                           map(get_title,
                               view.events(amount=3, last_uid=pages[3].UID())))
+
+    @browsing
+    def test_collections_are_supported(self, browser):
+        collection = create(Builder('collection')
+                            .titled('The Collection')
+                            .from_query({'portal_type': 'Folder'})
+                            .having(sort_on='modified',
+                                    sort_reversed=True))
+
+        now = datetime(2010, 12, 28, 10, 35)
+        with freeze(now - timedelta(hours=1)):
+            create(Builder('page').titled('A Page'))
+            create(Builder('folder').titled('First Folder'))
+
+        with freeze(now - timedelta(hours=2)):
+            create(Builder('folder').titled('Second Folder'))
+
+        with freeze(now):
+            browser.login().open(collection, view='activity')
+        self.assertEquals(
+            ['First Folder', 'Second Folder'],
+            map(attrgetter('title'), activity.events()))
+
+    @browsing
+    def test_collections_show_editable_border_for_default_view(self, browser):
+        collection = create(Builder('collection')
+                            .titled('The Collection')
+                            .from_query({'portal_type': 'Collection'})
+                            .having(sort_on='modified',
+                                    sort_reversed=True))
+        collection._setProperty('layout', 'activity', 'string')
+        transaction.commit()
+
+        browser.login().open(collection)
+        self.assertEquals('activity', plone.view())
+        self.assertTrue(browser.css('.documentEditable'),
+                        'Editable border is not visible')
