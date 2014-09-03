@@ -29,23 +29,27 @@ class TestActivityView(TestCase):
             folder.reindexObject()  # updates modified date
 
         with freeze(now - timedelta(hours=1)):
-            create(Builder('page').titled('The First Page'))
+            file_ = create(Builder('file').titled('The First File'))
 
         with freeze(now):
             browser.login().open(view='activity')
             self.assertEquals(2, len(activity.events()),
                               'Expected exactly two events')
 
-            page_event, folder_event = activity.events()
+            file_event, folder_event = activity.events()
             self.assertEquals(
-                'Document created an hour ago by test_user_1_',
-                page_event.byline)
-            self.assertEquals('The First Page', page_event.title)
+                'File created an hour ago by test_user_1_',
+                file_event.byline)
+            self.assertEquals('The First File', file_event.title)
+            self.assertEquals('{0}/view'.format(file_.absolute_url()),
+                              file_event.url,
+                              '/view should be appended for files')
 
             self.assertEquals(
                 'Folder modified yesterday by test_user_1_',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
+            self.assertEquals(folder.absolute_url(), folder_event.url)
 
     @browsing
     def test_fetch_more_events(self, browser):

@@ -11,6 +11,10 @@ class Event(object):
         return self.node.css('.title').first.text
 
     @property
+    def url(self):
+        return self.node.css('.title a').first.attrib['href']
+
+    @property
     def byline(self):
         return self.node.css('.byline').first.text
 

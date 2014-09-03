@@ -36,11 +36,16 @@
     </metal:BYLINE>
   </div>
 
-  <div class="body">
+  <div class="body"
+       tal:define="site_properties here/portal_properties/site_properties;
+                   view_actions site_properties/typesUseViewActionInListings|python:();">
     <metal:BODY metal:define-slot="body">
       <metal:TITLE metal:define-slot="body-title">
         <div class="title">
-          <a tal:attributes="href context/absolute_url"
+          <a tal:define="use_view python:context.portal_type in view_actions;
+                         url context/absolute_url;
+                         url python:use_view and url + '/view' or url;"
+             tal:attributes="href url"
              tal:content="context/Title" />
         </div>
       </metal:TITLE>
