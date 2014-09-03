@@ -40,7 +40,7 @@ setup(name='ftw.activity',
 
       install_requires=[
         'Plone',
-        'collective.lastmodifier',
+        'collective.lastmodifier >= 1.1.0',
         'collective.prettydate',
         'setuptools',
         ],
