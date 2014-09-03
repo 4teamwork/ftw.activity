@@ -5,6 +5,10 @@
       return;
     }
 
+    if(events.find('.more-button').length > 0) {
+      return;
+    }
+
     var more = $('<a />').
         attr('href', '#').
         addClass('more-button').
