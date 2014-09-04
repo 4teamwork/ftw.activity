@@ -5,7 +5,8 @@
 
   <head>
     <metal:block fill-slot="top_slot"
-                 tal:define="dummy python:request.set('disable_border',1)" />
+                 tal:define="standard_view here/@@plone_context_state/is_view_template;
+                             dummy python:standard_view or request.set('disable_border',1)" />
   </head>
 
   <body>
