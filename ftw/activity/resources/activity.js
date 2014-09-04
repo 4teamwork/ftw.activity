@@ -19,7 +19,11 @@
       event.preventDefault();
 
       var last_uid = events.find('.event:last').data('uid');
-      var url = "activity/fetch?last_uid=".concat(last_uid);
+      var url = $('base').attr('href');
+      if (url.slice(-1) !== '/') {
+        url += '/';
+      }
+      url += "activity/fetch?last_uid=".concat(last_uid);
 
       $.get(url, function(data) {
         if(data.trim().length) {
