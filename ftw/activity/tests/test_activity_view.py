@@ -80,7 +80,7 @@ class TestActivityView(TestCase):
                           map(attrgetter('title'), activity.events()))
 
     @browsing
-    def test_events_are_filtered_and_batched(self, browser):
+    def test_events_are_batched(self, browser):
         now = datetime(2010, 12, 28, 10, 35)
         pages = []
         for index in range(6):
@@ -88,17 +88,15 @@ class TestActivityView(TestCase):
                 pages.append(create(Builder('page')
                                     .titled('Page {0}'.format(index))))
 
-        ILastModifier(pages[1]).set(None)
         view = self.layer['portal'].restrictedTraverse('@@activity')
 
         get_title = lambda repr: repr.context.Title()
-
-        self.assertEquals(['Page 0', 'Page 2', 'Page 3'],
+        self.assertEquals(['Page 0', 'Page 1', 'Page 2'],
                           map(get_title, view.events(amount=3)))
 
-        self.assertEquals(['Page 4', 'Page 5'],
+        self.assertEquals(['Page 3', 'Page 4', 'Page 5'],
                           map(get_title,
-                              view.events(amount=3, last_uid=pages[3].UID())))
+                              view.events(amount=3, last_uid=pages[2].UID())))
 
     @browsing
     def test_collections_are_supported(self, browser):
