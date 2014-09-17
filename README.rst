@@ -107,9 +107,9 @@ for details on what slots you can fill.
 Links
 -----
 
-- github: https://github.com/4teamwork/ftw.testbrowser
-- pypi: http://pypi.python.org/pypi/ftw.testbrowser
-- CI: https://jenkins.4teamwork.ch/search?q=ftw.testbrowser
+- github: https://github.com/4teamwork/ftw.activity
+- pypi: http://pypi.python.org/pypi/ftw.activity
+- CI: https://jenkins.4teamwork.ch/search?q=ftw.activity
 
 
 Copyright
