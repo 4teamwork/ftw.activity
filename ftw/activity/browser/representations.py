@@ -7,6 +7,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from zope.component import adapts
 from zope.component import getUtility
+from zope.component import queryAdapter
 from zope.i18n import translate
 from zope.interface import implements
 from zope.interface import Interface
@@ -48,7 +49,10 @@ class DefaultRepresentation(object):
             'member': member}
 
     def get_last_modifier(self):
-        return ILastModifier(self.context).get()
+        modifier = queryAdapter(self.context, ILastModifier)
+        if modifier is None:
+            return None
+        return modifier.get()
 
     def portal_type(self):
         portal_types = getToolByName(self.context, 'portal_types')
