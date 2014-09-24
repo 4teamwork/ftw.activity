@@ -44,8 +44,7 @@ class DefaultRepresentation(object):
         return {
             'url': mtool.getHomeUrl(member.getId()),
             'portrait_url': self.portrait_url(last_modifier),
-            'fullname': member.getProperty('fullname') or \
-                member.getId(),
+            'fullname': member.getProperty('fullname') or member.getId(),
             'member': member}
 
     def get_last_modifier(self):

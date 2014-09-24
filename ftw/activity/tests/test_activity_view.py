@@ -1,4 +1,3 @@
-from collective.lastmodifier.interfaces import ILastModifier
 from datetime import datetime
 from datetime import timedelta
 from ftw.activity.testing import FUNCTIONAL_TESTING
