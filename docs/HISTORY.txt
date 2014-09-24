@@ -5,7 +5,9 @@ Changelog
 1.1.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ignore comments in activity view.
+  Fixes a bug where the activity view crashed when comments were added.
+  [jone]
 
 
 1.1.0 (2014-09-04)
