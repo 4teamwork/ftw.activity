@@ -8,8 +8,12 @@ from ftw.testbrowser import browsing
 from ftw.testbrowser.pages import plone
 from ftw.testing import freeze
 from operator import attrgetter
+from plone import api
 from plone.app.testing import setRoles
+from plone.app.testing import login
+from plone.app.testing import logout
 from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
@@ -154,3 +158,29 @@ class TestActivityView(TestCase):
         self.assertEquals(
             1, len(activity.events()),
             'Expected only page creation event to be visible.')
+
+    @browsing
+    def test_actor_not_available(self, browser):
+        """
+        This test makes sure that there won't be an error if the user who
+        created an object is no longer available.
+        """
+        # Become admin and create an unprivileged user.
+        login(self.layer['portal'], TEST_USER_NAME)
+        user = create(Builder('user').with_roles('Contributor'))
+        logout()
+
+        # Become the unprivileged and create an object.
+        login(self.layer['portal'], user.getId())
+        create(Builder('folder'))
+        logout()
+
+        # Become admin again and delete the unprivileged user.
+        login(self.layer['portal'], TEST_USER_NAME)
+        api.user.delete(user=user)
+        transaction.commit()
+
+        # Test.
+        browser.login().open(view='activity')
+        self.assertEquals(1, len(activity.events()),
+                          'Expected exactly one event')

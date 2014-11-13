@@ -44,6 +44,7 @@ setup(name='ftw.activity',
         'collective.prettydate',
         'ftw.upgrade',
         'setuptools',
+        'plone.api',
         ],
 
       tests_require=tests_require,
