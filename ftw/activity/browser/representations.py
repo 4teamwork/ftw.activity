@@ -2,6 +2,7 @@ from collective.lastmodifier.interfaces import ILastModifier
 from collective.prettydate.interfaces import IPrettyDate
 from ftw.activity import _
 from ftw.activity.interfaces import IActivityRepresentation
+from plone import api
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -42,11 +43,26 @@ class DefaultRepresentation(object):
         last_modifier = self.get_last_modifier()
         mtool = getToolByName(self.context, 'portal_membership')
         member = mtool.getMemberById(last_modifier)
-        return {
-            'url': mtool.getHomeUrl(member.getId()),
-            'portrait_url': self.portrait_url(last_modifier),
-            'fullname': member.getProperty('fullname') or member.getId(),
-            'member': member}
+
+        # Prepare some default data, in case there is no member (this might
+        # be the case if the directory service is not available or the user
+        # has been deleted).
+        actor_info = {
+            'url': '',
+            'portrait_url': '/'.join(
+                [api.portal.get().absolute_url(), 'defaultUser.png']
+            ),
+            'fullname': last_modifier or 'N/A',
+            'member': None,
+        }
+
+        if member:
+            actor_info['url'] = mtool.getHomeUrl(member.getId())
+            actor_info['portrait_url'] = self.portrait_url(last_modifier)
+            actor_info['fullname'] = member.getProperty('fullname') or member.getId()
+            actor_info['member'] = member
+
+        return actor_info
 
     def get_last_modifier(self):
         modifier = queryAdapter(self.context, ILastModifier)
