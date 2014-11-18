@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1.3 (unreleased)
+1.1.3 (2014-11-18)
 ------------------
 
 - Fixes a bug where the activity view crashed when the modifying user is no
