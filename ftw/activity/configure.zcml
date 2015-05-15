@@ -6,29 +6,29 @@
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="ftw.activity">
 
-  <five:registerPackage package="." initialize=".initialize" />
-  <i18n:registerTranslations directory="locales" />
+    <five:registerPackage package="." initialize=".initialize" />
+    <i18n:registerTranslations directory="locales" />
 
-  <include package=".browser" />
-  <include package=".upgrades" />
+    <include package=".browser" />
+    <include package=".upgrades" />
 
-  <browser:resourceDirectory
-      name="ftw.activity"
-      directory="resources" />
+    <browser:resourceDirectory
+        name="ftw.activity"
+        directory="resources" />
 
-  <genericsetup:registerProfile
-      name="default"
-      title="ftw.activity"
-      directory="profiles/default"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
+    <genericsetup:registerProfile
+        name="default"
+        title="ftw.activity"
+        directory="profiles/default"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
 
-  <genericsetup:registerProfile
-      name="uninstall"
-      title="ftw.activity"
-      directory="profiles/uninstall"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
-      />
+    <genericsetup:registerProfile
+        name="uninstall"
+        title="ftw.activity"
+        directory="profiles/uninstall"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        />
 
 </configure>
