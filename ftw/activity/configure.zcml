@@ -32,4 +32,42 @@
         for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
         />
 
+    <!-- archetypes -->
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".subscribers.make_object_added_activity"
+        />
+
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             Products.Archetypes.interfaces.IObjectEditedEvent"
+        handler=".subscribers.make_object_changed_activity"
+        />
+
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             zope.container.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.make_object_deleted_activity"
+        />
+
+    <!-- dexterity -->
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectAddedEvent"
+        handler=".subscribers.make_object_added_activity"
+        />
+
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+        handler=".subscribers.make_object_changed_activity"
+        />
+
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.make_object_deleted_activity"
+        />
+
 </configure>

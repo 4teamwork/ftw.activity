@@ -6,6 +6,7 @@ from plone.app.testing import FunctionalTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from zope.configuration import xmlconfig
+import ftw.activity.tests.builders
 
 
 class ActivityLayer(PloneSandboxLayer):
@@ -17,11 +18,13 @@ class ActivityLayer(PloneSandboxLayer):
             '  <include package="z3c.autoinclude" file="meta.zcml" />'
             '  <includePlugins package="plone" />'
             '  <includePluginsOverrides package="plone" />'
+            '  <include package="ftw.activity.tests" />'
             '</configure>',
             context=configurationContext)
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.activity:default')
+        applyProfile(portal, 'ftw.activity.tests:dexterity')
 
 
 ACTIVITY_FIXTURE = ActivityLayer()

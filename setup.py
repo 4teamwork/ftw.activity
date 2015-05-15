@@ -9,6 +9,8 @@ tests_require = [
     'ftw.builder',
     'ftw.testbrowser',
     'ftw.testing',
+    'plone.app.dexterity',
+    'plone.app.referenceablebehavior',
     'plone.app.testing',
     ]
 
