@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <metadata>
-  <version>1001</version>
-  <dependencies>
-    <dependency>profile-collective.lastmodifier:default</dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>profile-collective.lastmodifier:default</dependency>
+    </dependencies>
 </metadata>
