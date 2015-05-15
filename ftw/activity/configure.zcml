@@ -3,8 +3,11 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:profilehook="http://namespaces.zope.org/profilehook"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="ftw.activity">
+
+    <include package="ftw.profilehook" />
 
     <five:registerPackage package="." initialize=".initialize" />
     <i18n:registerTranslations directory="locales" />
@@ -24,12 +27,22 @@
         />
     <include package=".upgrades" />
 
+    <profilehook:hook
+        profile="ftw.activity:default"
+        handler=".hooks.installed"
+        />
+
     <genericsetup:registerProfile
         name="uninstall"
         title="ftw.activity"
         directory="profiles/uninstall"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        />
+
+    <profilehook:hook
+        profile="ftw.activity:uninstall"
+        handler=".hooks.uninstalled"
         />
 
     <!-- archetypes -->
