@@ -76,14 +76,3 @@ class ActivityView(BrowserView):
             if index >= amount:
                 break
             yield repr
-
-
-class CollectionActivityView(ActivityView):
-
-    def _lookup(self):
-        # Do not try to pass in sort_on / sort_order.
-        # sort_order will be taken from the collection
-        # configuration in any case!
-        # Therefore the view does not override sorting,
-        # the collection has to be configured properly.
-        return self.context.results(batch=False, brains=True)

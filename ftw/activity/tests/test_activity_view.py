@@ -9,9 +9,9 @@ from ftw.testbrowser.pages import plone
 from ftw.testing import freeze
 from operator import attrgetter
 from plone import api
-from plone.app.testing import setRoles
 from plone.app.testing import login
 from plone.app.testing import logout
+from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.registry.interfaces import IRegistry
@@ -19,6 +19,7 @@ from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
 from zope.component import getUtility
 import transaction
+
 
 
 class TestActivityView(TestCase):
@@ -103,43 +104,6 @@ class TestActivityView(TestCase):
         self.assertEquals(['Page 3', 'Page 4', 'Page 5'],
                           map(get_title,
                               view.events(amount=3, last_uid=pages[2].UID())))
-
-    @browsing
-    def test_collections_are_supported(self, browser):
-        collection = create(Builder('collection')
-                            .titled('The Collection')
-                            .from_query({'portal_type': 'Folder'})
-                            .having(sort_on='modified',
-                                    sort_reversed=True))
-
-        now = datetime(2010, 12, 28, 10, 35)
-        with freeze(now - timedelta(hours=1)):
-            create(Builder('page').titled('A Page'))
-            create(Builder('folder').titled('First Folder'))
-
-        with freeze(now - timedelta(hours=2)):
-            create(Builder('folder').titled('Second Folder'))
-
-        with freeze(now):
-            browser.login().open(collection, view='activity')
-        self.assertEquals(
-            ['First Folder', 'Second Folder'],
-            map(attrgetter('title'), activity.events()))
-
-    @browsing
-    def test_collections_show_editable_border_for_default_view(self, browser):
-        collection = create(Builder('collection')
-                            .titled('The Collection')
-                            .from_query({'portal_type': 'Collection'})
-                            .having(sort_on='modified',
-                                    sort_reversed=True))
-        collection._setProperty('layout', 'activity', 'string')
-        transaction.commit()
-
-        browser.login().open(collection)
-        self.assertEquals('activity', plone.view())
-        self.assertTrue(browser.css('.documentEditable'),
-                        'Editable border is not visible')
 
     @browsing
     def test_comments_do_not_break_activity_view(self, browser):

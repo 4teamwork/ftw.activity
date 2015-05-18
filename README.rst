@@ -45,10 +45,6 @@ Once the package is installed there is no link to the view.
 The view is available as ``/activity`` on any context, so you might
 want to place a link anywhere you like or add an action.
 
-For collections, ``ftw.activity`` registers an ``Activity`` view which
-can be selected as default view. Just make sure to sort the collection
-by modification date and reverse it for best experience.
-
 ``ftw.activity`` also registers an
 `ftw.tabbedview <https://github.com/4teamwork/ftw.tabbedview>`_
 tab with the name ``tabbedview_view-activity``.

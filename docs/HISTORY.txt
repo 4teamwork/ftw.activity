@@ -5,7 +5,9 @@ Changelog
 1.1.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Remove support for collections.
+  Because the activity feed will no longer be catalog based.
+  [jone]
 
 
 1.1.5 (2015-05-18)
