@@ -1,7 +1,8 @@
+from ftw.activity.catalog import get_activity_soup
 from ftw.activity.interfaces import IActivityRepresentation
-from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from repoze.catalog.query import Eq
 from zope.component import getMultiAdapter
 
 
@@ -34,34 +35,32 @@ class ActivityView(BrowserView):
     def events(self, amount=None, last_uid=None):
         amount = amount or self.request.get('amount_of_events', 10)
         last_uid = last_uid or self.request.get('last_uid', None)
-        brains = self._lookup()
+        activities = self._lookup()
         if last_uid:
-            brains = self._begin_after(last_uid, brains)
-        representations = self._build_representations(brains)
+            activities = self._begin_after(last_uid, activities)
+        representations = self._build_representations(activities)
         representations = self._filter_invisible(representations)
         representations = self._batch_to(amount, representations)
         return representations
 
     def query(self):
-        return {'path': '/'.join(self.context.getPhysicalPath()),
-                'sort_on': 'modified',
-                'sort_order': 'reverse'}
+        return Eq('path', '/'.join(self.context.getPhysicalPath()))
 
     def _lookup(self):
-        catalog = getToolByName(self.context, 'portal_catalog')
-        return catalog(self.query())
+        soup = get_activity_soup()
+        return soup.query(self.query(), sort_index='date', reverse=True)
 
-    def _begin_after(self, last_uid, brains):
+    def _begin_after(self, last_uid, activities):
         found = False
-        for brain in brains:
+        for activity in activities:
             if found:
-                yield brain
-            elif brain.UID == last_uid:
+                yield activity
+            elif activity.attrs['uuid'] == last_uid:
                 found = True
 
-    def _build_representations(self, brains):
-        for brain in brains:
-            obj = brain.getObject()
+    def _build_representations(self, activities):
+        for activity in activities:
+            obj = activity.get_object()
             representation = getMultiAdapter((obj, self.request),
                                              IActivityRepresentation)
             yield representation

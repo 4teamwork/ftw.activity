@@ -30,17 +30,16 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_shows_created_and_modified_objects(self, browser):
-        now = datetime(2010, 12, 28, 10, 35)
-        with freeze(now - timedelta(days=2)):
+        with freeze(datetime(2010, 12, 26, 10, 35)) as clock:
             folder = create(Builder('folder').titled('The Folder'))
 
-        with freeze(now - timedelta(days=1)):
+            clock.forward(days=1)
             folder.reindexObject()  # updates modified date
 
-        with freeze(now - timedelta(hours=1)):
+            clock.forward(days=1)
             file_ = create(Builder('file').titled('The First File'))
 
-        with freeze(now):
+            clock.forward(hours=1)
             browser.login().open(view='activity')
             self.assertEquals(2, len(activity.events()),
                               'Expected exactly two events')
@@ -76,22 +75,25 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_fetch_more_events(self, browser):
-        pages = [create(Builder('page').titled('Zero')),
-                 create(Builder('page').titled('One')),
-                 create(Builder('page').titled('Two')),
-                 create(Builder('page').titled('Three'))]
+        with freeze(datetime(2010, 1, 2, 1)) as clock:
+            pages = [create(Builder('page').titled('Zero'))]
+            clock.backward(hours=1)
+            pages.append(create(Builder('page').titled('One')))
+            clock.backward(hours=1)
+            pages.append(create(Builder('page').titled('Two')))
+            clock.backward(hours=1)
+            pages.append(create(Builder('page').titled('Three')))
 
         start_after = pages[1].UID()
         browser.login().open(view='activity?last_uid={}'.format(start_after))
         self.assertEquals(['Two', 'Three'],
                           map(attrgetter('title'), activity.events()))
 
-    @browsing
-    def test_events_are_batched(self, browser):
-        now = datetime(2010, 12, 28, 10, 35)
+    def test_events_are_batched(self):
         pages = []
-        for index in range(6):
-            with freeze(now - timedelta(hours=index)):
+        with freeze(datetime(2010, 1, 2)) as clock:
+            for index in range(6):
+                clock.backward(hours=1)
                 pages.append(create(Builder('page')
                                     .titled('Page {0}'.format(index))))
 

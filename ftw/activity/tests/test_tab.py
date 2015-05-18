@@ -1,8 +1,10 @@
+from datetime import datetime
 from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.activity.tests.pages import activity
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.testbrowser import browsing
+from ftw.testing import freeze
 from operator import attrgetter
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
@@ -17,9 +19,12 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_fetch_more_events(self, browser):
-        create(Builder('page').titled('One'))
-        create(Builder('page').titled('Two'))
-        create(Builder('page').titled('Three'))
+        with freeze(datetime(2010, 1, 2)) as clock:
+            create(Builder('page').titled('One'))
+            clock.backward(days=1)
+            create(Builder('page').titled('Two'))
+            clock.backward(days=1)
+            create(Builder('page').titled('Three'))
 
         browser.login().open(view='tabbedview_view-activity')
         self.assertEquals(['One', 'Two', 'Three'],
