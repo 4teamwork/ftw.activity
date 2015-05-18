@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.1.5 (unreleased)
+1.1.5 (2015-05-18)
 ------------------
 
 - Fix diazo error when fetching more events.
