@@ -1,5 +1,3 @@
-from Acquisition import aq_inner
-from Acquisition import aq_parent
 from datetime import datetime
 from DateTime import DateTime
 from ftw.activity.catalog import get_activity_soup
@@ -103,24 +101,3 @@ class TestCatalog(TestCase):
 
         self.assertItemsEqual(['/plone/folder', '/plone/folder/one'],
                               results)
-
-    def test_get_object_of_record(self):
-        doc = create(Builder('document').titled('Foo'))
-        record = get_activity_soup().get(object_added(doc))
-
-        self.assertEquals(doc, record.get_object())
-
-        aq_parent(aq_inner(doc)).manage_delObjects([doc.getId()])
-        self.assertEquals(None, record.get_object(),
-                          'get_object should return None if the object is deleted.')
-
-        create(Builder('document').titled('Foo'))
-        self.assertEquals(None, record.get_object(),
-                          'get_object should return None when the object at the path'
-                          ' is not the same object.')
-
-    def test_record_string_representation(self):
-        record_id = object_added(create(Builder('document')))
-        record = get_activity_soup().get(record_id)
-        self.assertEquals('<ActivityRecord "added" for "/plone/document">',
-                          str(record))
