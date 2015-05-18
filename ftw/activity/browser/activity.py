@@ -18,7 +18,11 @@ class ActivityView(BrowserView):
         """Action for retrieving more events (based on `last_uid` in
         the request) with AJAX.
         """
-        return self.events_template()
+        self.request.response.setHeader('X-Theme-Disabled', 'True')
+        # The HTML stripped in order to have empty response content when
+        # there are no tags at all, so that diazo does not try to
+        # parse it.
+        return self.events_template().strip()
 
     def raw(self):
         """Action for embedding activity stream into another view.

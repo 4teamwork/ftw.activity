@@ -5,7 +5,11 @@ Changelog
 1.1.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix diazo error when fetching more events.
+  [jone]
+
+- disable diazo themeing for ajax responses.
+  [jone]
 
 
 1.1.4 (2015-03-25)
