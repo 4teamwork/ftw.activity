@@ -18,6 +18,7 @@ class ActivityView(BrowserView):
         """Action for retrieving more events (based on `last_uid` in
         the request) with AJAX.
         """
+        self.request.response.setHeader('X-Theme-Disabled', 'True')
         return self.events_template()
 
     def raw(self):
