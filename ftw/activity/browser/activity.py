@@ -19,7 +19,10 @@ class ActivityView(BrowserView):
         the request) with AJAX.
         """
         self.request.response.setHeader('X-Theme-Disabled', 'True')
-        return self.events_template()
+        # The HTML stripped in order to have empty response content when
+        # there are no tags at all, so that diazo does not try to
+        # parse it.
+        return self.events_template().strip()
 
     def raw(self):
         """Action for embedding activity stream into another view.
