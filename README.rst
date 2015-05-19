@@ -105,13 +105,14 @@ Implement the adapter (``activity.py``):
 
     class CustomActivityRenderer(object):
         implements(IActivityRenderer)
-        adapts(Interface, Interface)
+        adapts(Interface, Interface, Interface)
 
         index = ViewPageTemplateFile('templates/activity_renderer.pt')
 
-        def __init__(self, context, request):
+        def __init__(self, context, request, view):
             self.context = context
             self.request = request
+            self.view = view
             self.items = []
 
         def position(self):

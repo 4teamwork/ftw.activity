@@ -79,8 +79,8 @@ class ActivityView(BrowserView):
 
     @instance.memoize
     def _get_renderers(self):
-        renderers = map(itemgetter(1),
-                        getAdapters((self.context, self.request),
-                                    IActivityRenderer))
+        adapters = getAdapters((self.context, self.request, self),
+                               IActivityRenderer)
+        renderers = map(itemgetter(1), adapters)
         renderers.sort(key=lambda renderer: renderer.position())
         return renderers

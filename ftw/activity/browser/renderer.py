@@ -7,13 +7,14 @@ from zope.interface import Interface
 
 class DefaultRenderer(object):
     implements(IActivityRenderer)
-    adapts(Interface, Interface)
+    adapts(Interface, Interface, Interface)
 
     index = ViewPageTemplateFile('templates/default.pt')
 
-    def __init__(self, context, request):
+    def __init__(self, context, request, view):
         self.context = context
         self.request = request
+        self.view = view
         self.items = []
 
     def position(self):

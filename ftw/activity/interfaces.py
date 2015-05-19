@@ -4,7 +4,8 @@ from zope.interface import Interface
 class IActivityRenderer(Interface):
     """An activity renderer renders an activity to HTML.
 
-    It is a named multi-adapter, adapting any context and request.
+    It is a named multi-adapter, adapting any context, request and
+    the activity view.
     The adapted context is not the object on which the activity happened,
     but the context where the stream is rendered.
 
@@ -26,8 +27,8 @@ class IActivityRenderer(Interface):
     etc.
     """
 
-    def __init__(context, request):
-        """Adapts a context and the request.
+    def __init__(context, request, view):
+        """Adapts a context, request and activity view.
         """
 
     def position():
