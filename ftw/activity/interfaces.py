@@ -1,3 +1,5 @@
+from zope.component.interfaces import IObjectEvent
+from zope.interface import Attribute
 from zope.interface import Interface
 
 
@@ -49,3 +51,10 @@ class IActivityRenderer(Interface):
     def render(activity, obj):
         """Renders the activity.
         """
+
+class IActivityCreatedEvent(IObjectEvent):
+    """The activity created event is fired when a new activity record is created.
+    """
+
+    activity = Attribute('The activity record.')
+    action = Attribute('The activity action.')
