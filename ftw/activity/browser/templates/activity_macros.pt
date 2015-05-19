@@ -5,9 +5,22 @@
 
     <div class="avatar">
         <metal:AVATAR metal:define-slot="avatar">
-            <img width="50" height="50"
-                 tal:attributes="src string:${actor/portrait_url}?size=50" />
+            <img height="18"
+                 tal:attributes="src string:${actor/portrait_url}?size=18" />
         </metal:AVATAR>
+    </div>
+
+    <div class="title">
+        <metal:TITLE metal:define-slot="title">
+            <a tal:define="site_properties here/portal_properties/site_properties;
+                           view_actions site_properties/typesUseViewActionInListings|python:();
+                           use_view python:activity.attrs['portal_type'] in view_actions;
+                           url obj/absolute_url|string:;
+                           url python:use_view and url + '/view' or url;"
+               tal:attributes="href url"
+               tal:omit-tag="not:obj"
+               tal:content="activity/attrs/title" />
+        </metal:TITLE>
     </div>
 
     <div class="byline">
@@ -38,22 +51,8 @@
         </metal:BYLINE>
     </div>
 
-    <div class="body"
-         tal:define="site_properties here/portal_properties/site_properties;
-                     view_actions site_properties/typesUseViewActionInListings|python:();">
+    <div class="body">
         <metal:BODY metal:define-slot="body">
-            <metal:TITLE metal:define-slot="body-title">
-                <div class="title">
-                    <a tal:define="use_view python:activity.attrs['portal_type'] in view_actions;
-                                   url obj/absolute_url|string:;
-                                   url python:use_view and url + '/view' or url;"
-                       tal:attributes="href url"
-                       tal:omit-tag="not:obj"
-                       tal:content="activity/attrs/title" />
-                </div>
-            </metal:TITLE>
-
-            <metal:CONTENT metal:define-slot="body-content" />
         </metal:BODY>
     </div>
 
