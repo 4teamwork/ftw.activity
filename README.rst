@@ -1,5 +1,5 @@
 ftw.activity
-===============
+============
 
 ``ftw.activity`` provides a view with an activity stream for Plone.
 
@@ -9,21 +9,19 @@ ftw.activity
 How it works
 ============
 
-The feed is based on a simple catalog query restricted to the current
-context, ordered by modified date so that the newest modifications are
-on top.
+Activities are stored with event handlers into a custom `souper`_ catalog.
+An activity view then renders each activity for a context (recursively) with
+activity renderers.
 
-**Limitations:**
 
-- The ordering by modified date is not exactly accurate since the
-  precision of the catalog index is only down to the minute.
-- Since it is based on a catalog query each object only appears once
-  even when it is edited multiple times in a row.
-- Only existing objects are listed, so deleting objects will not appear
-  in the feed at all.
-- Only actions which change the modification date are covered.
-- We do not register any links or actions, so that you can integrate
-  it into Plone as you like. See the usage sections.
+Supported events
+================
+
+The default event handlers work for Archetypes and Dexterity objects.
+
+- Object added
+- Object changed
+- Object deleted
 
 
 Usage
@@ -50,58 +48,100 @@ want to place a link anywhere you like or add an action.
 tab with the name ``tabbedview_view-activity``.
 
 
-Custom event representations
-============================
+Custom activities
+=================
 
-By default the each event is represented by some metadata
-(e.g. author with portrait, action, etc) and the title of the modified
-object.
-
-If you'd like to display more information you can do this by registering
-a custom representation adapter in your custom code.
-
-Register the adapter in your ZCML:
-
-.. code:: xml
-
-  <adapter factory=".activity.IssueResponseRepresentation"
-           for="..interfaces.IIssueResponse *"
-           provides="ftw.activity.interfaces.IActivityRepresentation"
-           />
-
-create the adapter class (example `./activity.py`):
+Custom activities can easily be registered in the `souper`_ catalog and
+are automatically rendered:
 
 .. code:: python
 
-  from ftw.activity.browser.representations import DefaultRepresentation
-  from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+    from ftw.activity.catalog import ActivityRecord
+    from ftw.activity.catalog import get_activity_soup
 
-  class IssueResponseRepresentation(DefaultRepresentation):
-      index = ViewPageTemplateFile('templates/issue_representation.pt')
+    record = ActivityRecord(context, 'downloaded')
+    get_activity_soup().add(record)
 
-      # helper methods when needed
 
-and a template (example `./templates/issue_representation.pt`):
+Activity renderers
+==================
+
+The default activity renderer renders the activity with a link to the
+object (unless it was deleted), the event and the actor.
+
+However, if you want to change how activities are rendered you can easily
+do that with a custom renderer.
+An activity renderer is a named multi-adapter.
+
+Be aware that the renderer adapts the context where the activity view is rendered,
+not the object on which the activity happened.
+The reason for that is that the object may no longer exist.
+
+The renderer must implement three methods, ``position``, ``match`` and ``render``.
+Since there may be multiple adapters which can render an activity, the ``position``
+is used to determine which renderer precedes.
+The ``match`` method is used to ask the renderer whether he wants to render a certain
+activity.
+If the activity matches, it is renderered using the ``render`` method.
+
+**Warning** Be aware the the object passed to match and render may be ``None``,
+when the object was deleted.
+
+Example ZCML registration:
+
+.. code:: xml
+
+    <adapter factory=".activity.CustomActivityRenderer" name="my.package-renderer" />
+
+
+Implement the adapter (``activity.py``):
+
+    from ftw.activity.interfaces import IActivityRenderer
+    from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+    from zope.component import adapts
+    from zope.interface import implements
+    from zope.interface import Interface
+
+
+    class CustomActivityRenderer(object):
+        implements(IActivityRenderer)
+        adapts(Interface, Interface)
+
+        index = ViewPageTemplateFile('templates/activity_renderer.pt')
+
+        def __init__(self, context, request):
+            self.context = context
+            self.request = request
+            self.items = []
+
+        def position(self):
+            # The position of the default renderer is 1000
+            return 500
+
+        def match(self, activity, obj):
+            return activity.attrs['portal_type'] == 'MyType'
+
+        def render(self, activity, obj):
+            return self.index(activity=activity, obj=obj)
+
+
+In the template (``templates/activity_renderer.pt``) you may want to use
+the default activity macro and extend it:
 
 .. code:: html
 
   <metal:wrapper use-macro="context/@@activity_macros/macros/event">
-    <metal:CONTENT fill-slot="body-content">
+    <metal:CONTENT fill-slot="body-content"
+                   tal:define="activity nocall:activity|nocall:options/activity">
 
-      <div class="issue-text"
-           tal:content="context/text" />
+      <div tal:attributes="class string:activity-icon-{$activity/action}"></div>
 
     </metal:CONTENT>
   </metal:wrapper>
 
-take a look at the
-`activity_macros <https://github.com/4teamwork/ftw.activity/blob/master/ftw/activity/browser/templates/activity_macros.pt>`_
-for details on what slots you can fill.
-
-
 
 Links
------
+=====
 
 - github: https://github.com/4teamwork/ftw.activity
 - pypi: http://pypi.python.org/pypi/ftw.activity
@@ -109,8 +149,10 @@ Links
 
 
 Copyright
----------
+=========
 
 This package is copyright by `4teamwork <http://www.4teamwork.ch/>`_.
 
 ``ftw.activity`` is licensed under GNU General Public License, version 2.
+
+.. _souper: https://pypi.python.org/pypi/souper
