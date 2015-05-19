@@ -1,5 +1,6 @@
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from datetime import datetime
-from datetime import timedelta
 from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.activity.tests.pages import activity
 from ftw.builder import Builder
@@ -29,7 +30,7 @@ class TestActivityView(TestCase):
         setRoles(self.layer['portal'], TEST_USER_ID, ['Manager'])
 
     @browsing
-    def test_shows_created_and_modified_objects(self, browser):
+    def test_shows_added_and_modified_objects(self, browser):
         with freeze(datetime(2010, 12, 26, 10, 35)) as clock:
             folder = create(Builder('folder').titled('The Folder'))
 
@@ -46,7 +47,7 @@ class TestActivityView(TestCase):
 
             file_event, folder_event = activity.events()
             self.assertEquals(
-                'File created an hour ago by test_user_1_',
+                'File added an hour ago by test_user_1_',
                 file_event.byline)
             self.assertEquals('The First File', file_event.title)
             self.assertEquals('{0}/view'.format(file_.absolute_url()),
@@ -54,7 +55,7 @@ class TestActivityView(TestCase):
                               '/view should be appended for files')
 
             self.assertEquals(
-                'Folder modified yesterday by test_user_1_',
+                'Folder added day before by test_user_1_',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
             self.assertEquals(folder.absolute_url(), folder_event.url)
@@ -99,7 +100,7 @@ class TestActivityView(TestCase):
 
         view = self.layer['portal'].restrictedTraverse('@@activity')
 
-        get_title = lambda repr: repr.context.Title()
+        get_title = lambda repr: repr['activity'].attrs['title']
         self.assertEquals(['Page 0', 'Page 1', 'Page 2'],
                           map(get_title, view.events(amount=3)))
 
@@ -150,3 +151,29 @@ class TestActivityView(TestCase):
         browser.login().open(view='activity')
         self.assertEquals(1, len(activity.events()),
                           'Expected exactly one event')
+
+    @browsing
+    def test_delete_events_are_shown(self, browser):
+        with freeze(datetime(2010, 1, 2)) as clock:
+            page = create(Builder('page').titled('The Page'))
+
+            browser.login().open(view='activity')
+            self.assertEquals(
+                [{'title': 'The Page',
+                  'url': 'http://nohost/plone/the-page',
+                  'byline': 'Document added now by test_user_1_'}],
+                activity.events_infos())
+
+            clock.forward(hours=1)
+            aq_parent(aq_inner(page)).manage_delObjects([page.getId()])
+            transaction.commit()
+
+            browser.reload()
+            self.assertEquals(
+                [{'title': 'The Page',
+                  'url': None,
+                  'byline': 'Document deleted now by test_user_1_'},
+                 {'title': 'The Page',
+                  'url': None,
+                  'byline': 'Document added an hour ago by test_user_1_'}],
+                activity.events_infos())

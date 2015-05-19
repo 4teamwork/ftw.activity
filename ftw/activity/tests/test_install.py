@@ -9,10 +9,8 @@ from ftw.testing import freeze
 from plone.app.testing import applyProfile
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
-from Products.Archetypes.event import ObjectEditedEvent
 from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
-from zope.event import notify
 
 
 class TestInstalling(TestCase):

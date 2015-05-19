@@ -25,6 +25,6 @@
         template="templates/activity_macros.pt"
         />
 
-    <adapter factory=".representations.DefaultRepresentation" />
+    <adapter factory=".renderer.DefaultRenderer" name="default" />
 
 </configure>

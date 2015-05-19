@@ -15,6 +15,7 @@ class ActivityRecord(Record):
         self.attrs['path'] = '/'.join(context.getPhysicalPath())
         self.attrs['uuid'] = IUUID(context)
         self.attrs['portal_type'] = context.portal_type
+        self.attrs['title'] = context.Title()
         self.attrs['action'] = action
         self.attrs['actor'] = (actor_userid
                                or getSecurityManager().getUser().getId())
@@ -37,7 +38,7 @@ class ActivityRecord(Record):
 
         portrait = membership.getPersonalPortrait(userid)
         return {'url': membership.getHomeUrl(userid),
-                'portrait_url': portrait and portrait.absolute_url()  or '',
+                'portrait_url': portrait and portrait.absolute_url() or '',
                 'fullname': member.getProperty('fullname') or userid}
 
     def get_pretty_date(self):
@@ -63,3 +64,5 @@ class ActivityRecord(Record):
             self.__class__.__name__,
             self.attrs['action'],
             self.attrs['path'])
+
+    __repr__ = __str__

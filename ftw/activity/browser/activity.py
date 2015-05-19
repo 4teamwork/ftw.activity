@@ -1,9 +1,11 @@
 from ftw.activity.catalog import get_activity_soup
-from ftw.activity.interfaces import IActivityRepresentation
+from ftw.activity.interfaces import IActivityRenderer
+from operator import itemgetter
+from plone.memoize import instance
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from repoze.catalog.query import Eq
-from zope.component import getMultiAdapter
+from zope.component import getAdapters
 
 
 class ActivityView(BrowserView):
@@ -38,10 +40,8 @@ class ActivityView(BrowserView):
         activities = self._lookup()
         if last_uid:
             activities = self._begin_after(last_uid, activities)
-        representations = self._build_representations(activities)
-        representations = self._filter_invisible(representations)
-        representations = self._batch_to(amount, representations)
-        return representations
+        activities = self._batch_to(amount, activities)
+        return self._lookup_renderers_for_activities(activities)
 
     def query(self):
         return Eq('path', '/'.join(self.context.getPhysicalPath()))
@@ -58,20 +58,29 @@ class ActivityView(BrowserView):
             elif activity.attrs['uuid'] == last_uid:
                 found = True
 
-    def _build_representations(self, activities):
-        for activity in activities:
-            obj = activity.get_object()
-            representation = getMultiAdapter((obj, self.request),
-                                             IActivityRepresentation)
-            yield representation
-
-    def _filter_invisible(self, representations):
-        for repr in representations:
-            if repr.visible():
-                yield repr
-
-    def _batch_to(self, amount, representations):
-        for index, repr in enumerate(representations):
+    def _batch_to(self, amount, activities):
+        for index, repr in enumerate(activities):
             if index >= amount:
                 break
             yield repr
+
+    def _lookup_renderers_for_activities(self, activities):
+        for activity in activities:
+            obj = activity.get_object()
+            yield {'uid': activity.attrs['uuid'],
+                   'activity': activity,
+                   'obj': obj,
+                   'render': self._find_renderer_for_activity(activity, obj)}
+
+    def _find_renderer_for_activity(self, activity, obj):
+        for renderer in self._get_renderers():
+            if renderer.match(activity, obj):
+                return lambda: renderer.render(activity, obj)
+
+    @instance.memoize
+    def _get_renderers(self):
+        renderers = map(itemgetter(1),
+                        getAdapters((self.context, self.request),
+                                    IActivityRenderer))
+        renderers.sort(key=lambda renderer: renderer.position())
+        return renderers
