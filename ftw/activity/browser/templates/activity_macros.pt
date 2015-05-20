@@ -3,12 +3,16 @@
                            obj nocall:obj|nocall:options/obj;
                            actor activity/get_actor_info">
 
+    <metal:ABOVE_AVATAR metal:define-slot="above-avatar" />
+
     <div class="avatar">
         <metal:AVATAR metal:define-slot="avatar">
             <img height="18"
                  tal:attributes="src string:${actor/portrait_url}?size=18" />
         </metal:AVATAR>
     </div>
+
+    <metal:ABOVE_TITLE metal:define-slot="above-title" />
 
     <div class="title">
         <metal:TITLE metal:define-slot="title">
@@ -22,6 +26,8 @@
                tal:content="activity/attrs/title" />
         </metal:TITLE>
     </div>
+
+    <metal:BELOW_TITLE metal:define-slot="below-title" />
 
     <div class="byline">
         <metal:BYLINE metal:define-slot="byline"
@@ -51,10 +57,14 @@
         </metal:BYLINE>
     </div>
 
+    <metal:ABOVE_BODY metal:define-slot="above-body" />
+
     <div class="body">
         <metal:BODY metal:define-slot="body">
         </metal:BODY>
     </div>
+
+    <metal:BELOW_BODY metal:define-slot="below-body" />
 
     <div class="visualClear"></div>
 </metal:wrapper>
