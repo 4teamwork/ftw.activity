@@ -6,24 +6,22 @@
   background-color: #EDF6F7;
 }
 
-.activity .event > * {
-  margin-left: 60px;
-}
-
 .activity .event .avatar {
   float: left;
-  margin-left: 0px;
+  padding-right: 0.4em;
 }
 
-.activity .event .body .title {
+.activity .event .title {
   font-weight: bold;
-  font-size: 150%;
+  font-size: 17pt;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .activity .event img {
   border: 1px solid #EEE;
-  max-width: 100%;
-  height: 100%;
 }
 
 .activity a.more-button {

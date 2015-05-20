@@ -2,6 +2,7 @@ from ftw.activity.catalog import get_activity_soup
 from ftw.activity.interfaces import IActivityRenderer
 from operator import itemgetter
 from plone.memoize import instance
+from Products.CMFPlone.utils import normalizeString
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from repoze.catalog.query import Eq
@@ -67,8 +68,13 @@ class ActivityView(BrowserView):
     def _lookup_renderers_for_activities(self, activities):
         for activity in activities:
             obj = activity.get_object()
+
             yield {'uid': activity.attrs['uuid'],
                    'activity': activity,
+                   'classes': ('event activity-action-{0}'
+                               ' activity-contenttype-{1}'.format(
+                        activity.attrs['action'],
+                        activity.attrs['portal_type'])),
                    'obj': obj,
                    'render': self._find_renderer_for_activity(activity, obj)}
 
