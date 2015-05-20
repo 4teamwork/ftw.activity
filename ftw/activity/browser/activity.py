@@ -1,8 +1,11 @@
-from ftw.activity.interfaces import IActivityRepresentation
-from Products.CMFCore.utils import getToolByName
+from ftw.activity.catalog import get_activity_soup
+from ftw.activity.interfaces import IActivityRenderer
+from operator import itemgetter
+from plone.memoize import instance
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from zope.component import getMultiAdapter
+from repoze.catalog.query import Eq
+from zope.component import getAdapters
 
 
 class ActivityView(BrowserView):
@@ -34,56 +37,50 @@ class ActivityView(BrowserView):
     def events(self, amount=None, last_uid=None):
         amount = amount or self.request.get('amount_of_events', 10)
         last_uid = last_uid or self.request.get('last_uid', None)
-        brains = self._lookup()
+        activities = self._lookup()
         if last_uid:
-            brains = self._begin_after(last_uid, brains)
-        representations = self._build_representations(brains)
-        representations = self._filter_invisible(representations)
-        representations = self._batch_to(amount, representations)
-        return representations
+            activities = self._begin_after(last_uid, activities)
+        activities = self._batch_to(amount, activities)
+        return self._lookup_renderers_for_activities(activities)
 
     def query(self):
-        return {'path': '/'.join(self.context.getPhysicalPath()),
-                'sort_on': 'modified',
-                'sort_order': 'reverse'}
+        return Eq('path', '/'.join(self.context.getPhysicalPath()))
 
     def _lookup(self):
-        catalog = getToolByName(self.context, 'portal_catalog')
-        return catalog(self.query())
+        soup = get_activity_soup()
+        return soup.query(self.query(), sort_index='date', reverse=True)
 
-    def _begin_after(self, last_uid, brains):
+    def _begin_after(self, last_uid, activities):
         found = False
-        for brain in brains:
+        for activity in activities:
             if found:
-                yield brain
-            elif brain.UID == last_uid:
+                yield activity
+            elif activity.attrs['uuid'] == last_uid:
                 found = True
 
-    def _build_representations(self, brains):
-        for brain in brains:
-            obj = brain.getObject()
-            representation = getMultiAdapter((obj, self.request),
-                                             IActivityRepresentation)
-            yield representation
-
-    def _filter_invisible(self, representations):
-        for repr in representations:
-            if repr.visible():
-                yield repr
-
-    def _batch_to(self, amount, representations):
-        for index, repr in enumerate(representations):
+    def _batch_to(self, amount, activities):
+        for index, repr in enumerate(activities):
             if index >= amount:
                 break
             yield repr
 
+    def _lookup_renderers_for_activities(self, activities):
+        for activity in activities:
+            obj = activity.get_object()
+            yield {'uid': activity.attrs['uuid'],
+                   'activity': activity,
+                   'obj': obj,
+                   'render': self._find_renderer_for_activity(activity, obj)}
 
-class CollectionActivityView(ActivityView):
+    def _find_renderer_for_activity(self, activity, obj):
+        for renderer in self._get_renderers():
+            if renderer.match(activity, obj):
+                return lambda: renderer.render(activity, obj)
 
-    def _lookup(self):
-        # Do not try to pass in sort_on / sort_order.
-        # sort_order will be taken from the collection
-        # configuration in any case!
-        # Therefore the view does not override sorting,
-        # the collection has to be configured properly.
-        return self.context.results(batch=False, brains=True)
+    @instance.memoize
+    def _get_renderers(self):
+        adapters = getAdapters((self.context, self.request, self),
+                               IActivityRenderer)
+        renderers = map(itemgetter(1), adapters)
+        renderers.sort(key=lambda renderer: renderer.position())
+        return renderers

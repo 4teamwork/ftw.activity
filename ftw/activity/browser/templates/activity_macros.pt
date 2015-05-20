@@ -1,58 +1,61 @@
 <metal:wrapper define-macro="event" i18n:domain="ftw.activity"
-               tal:define="actor view/actor">
+               tal:define="activity nocall:activity|nocall:options/activity;
+                           obj nocall:obj|nocall:options/obj;
+                           actor activity/get_actor_info">
 
-  <div class="avatar">
-    <metal:AVATAR metal:define-slot="avatar">
-      <img width="50" height="50"
-           tal:attributes="src string:${actor/portrait_url}?size=50" />
-    </metal:AVATAR>
-  </div>
+    <div class="avatar">
+        <metal:AVATAR metal:define-slot="avatar">
+            <img width="50" height="50"
+                 tal:attributes="src string:${actor/portrait_url}?size=50" />
+        </metal:AVATAR>
+    </div>
 
-  <div class="byline">
-    <metal:BYLINE metal:define-slot="byline"
-                  i18n:translate="byline_text">
-      <span class="portal_type"
-            i18n:name="portal_type"
-            tal:content="view/portal_type" />
+    <div class="byline">
+        <metal:BYLINE metal:define-slot="byline"
+                      i18n:translate="byline_text">
+            <span class="portal_type"
+                  i18n:name="portal_type"
+                  tal:content="activity/translated_portal_type" />
 
-      <span class="action"
-            i18n:name="action"
-            tal:content="view/action"
-            i18n:translate=""/>
+            <span class="action"
+                  i18n:name="action"
+                  tal:content="activity/attrs/action"
+                  i18n:translate=""/>
 
-      <span class="when"
-            i18n:name="when"
-            tal:define="when view/when"
-            tal:content="when/relative"
-            tal:attributes="title python:here.toLocalizedTime(when['absolute'], long_format=True)"/>
+            <span class="when"
+                  i18n:name="when"
+                  tal:define="when activity/get_pretty_date"
+                  tal:content="when/relative"
+                  tal:attributes="title python:here.toLocalizedTime(when['absolute'], long_format=True)"/>
 
-      by
+            by
 
-      <span i18n:name="actor" class="actor">
-        <a tal:attributes="href actor/url"
-           tal:omit-tag="not:actor/url"
-           tal:content="actor/fullname" />
-      </span>
-    </metal:BYLINE>
-  </div>
+            <span i18n:name="actor" class="actor">
+                <a tal:attributes="href actor/url"
+                   tal:omit-tag="not:actor/url"
+                   tal:content="actor/fullname" />
+            </span>
+        </metal:BYLINE>
+    </div>
 
-  <div class="body"
-       tal:define="site_properties here/portal_properties/site_properties;
-                   view_actions site_properties/typesUseViewActionInListings|python:();">
-    <metal:BODY metal:define-slot="body">
-      <metal:TITLE metal:define-slot="body-title">
-        <div class="title">
-          <a tal:define="use_view python:context.portal_type in view_actions;
-                         url context/absolute_url;
-                         url python:use_view and url + '/view' or url;"
-             tal:attributes="href url"
-             tal:content="context/Title" />
-        </div>
-      </metal:TITLE>
+    <div class="body"
+         tal:define="site_properties here/portal_properties/site_properties;
+                     view_actions site_properties/typesUseViewActionInListings|python:();">
+        <metal:BODY metal:define-slot="body">
+            <metal:TITLE metal:define-slot="body-title">
+                <div class="title">
+                    <a tal:define="use_view python:activity.attrs['portal_type'] in view_actions;
+                                   url obj/absolute_url|string:;
+                                   url python:use_view and url + '/view' or url;"
+                       tal:attributes="href url"
+                       tal:omit-tag="not:obj"
+                       tal:content="activity/attrs/title" />
+                </div>
+            </metal:TITLE>
 
-      <metal:CONTENT metal:define-slot="body-content" />
-    </metal:BODY>
-  </div>
+            <metal:CONTENT metal:define-slot="body-content" />
+        </metal:BODY>
+    </div>
 
-  <div class="visualClear"></div>
+    <div class="visualClear"></div>
 </metal:wrapper>

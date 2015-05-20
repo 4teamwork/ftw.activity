@@ -12,12 +12,25 @@ class Event(object):
 
     @property
     def url(self):
-        return self.node.css('.title a').first.attrib['href']
+        link = self.node.css('.title a')
+        if link:
+            return link.first.attrib['href']
+        else:
+            return None
 
     @property
     def byline(self):
         return self.node.css('.byline').first.text
 
+    def infos(self):
+        return {'title': self.title,
+                'url': self.url,
+                'byline': self.byline}
+
 
 def events(browser=browser):
     return map(Event, browser.css('.activity .events .event'))
+
+
+def events_infos(browser=browser):
+    return [event.infos() for event in events(browser)]

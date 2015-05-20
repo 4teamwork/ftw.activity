@@ -2,10 +2,18 @@ Changelog
 =========
 
 
-1.1.6 (unreleased)
+2.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Implement custom souper-based catalog for logging all activities separately.
+  This allows us to also track delete activities.
+  The rendering has changed completely: custom representations must be rewritten
+  to the new renderer adapter.
+  [jone]
+
+- Remove support for collections.
+  Because the activity feed will no longer be catalog based.
+  [jone]
 
 
 1.1.5 (2015-05-18)

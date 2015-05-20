@@ -15,4 +15,9 @@
         directory="profiles/1001"
         />
 
+    <upgrade-step:directory
+        profile="ftw.activity:default"
+        directory="."
+        />
+
 </configure>

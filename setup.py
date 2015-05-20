@@ -2,13 +2,15 @@ import os
 from setuptools import setup, find_packages
 
 
-version = '1.1.6.dev0'
+version = '2.0.0.dev0'
 
 
 tests_require = [
     'ftw.builder',
     'ftw.testbrowser',
     'ftw.testing',
+    'plone.app.dexterity',
+    'plone.app.referenceablebehavior',
     'plone.app.testing',
     ]
 
@@ -42,9 +44,10 @@ setup(name='ftw.activity',
         'Plone',
         'collective.lastmodifier >= 1.1.0',
         'collective.prettydate',
-        'ftw.upgrade',
-        'setuptools',
+        'ftw.upgrade >= 1.14.4',
         'plone.api',
+        'setuptools',
+        'souper',
         ],
 
       tests_require=tests_require,

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-09-02 16:00+0000\n"
+"POT-Creation-Date: 2015-05-18 09:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,5 +14,11 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "Preferred-Encodings: utf-8 latin1\n"
 
-msgid "activity"
-msgstr "Aktivität"
+msgid "added"
+msgstr ""
+
+msgid "changed"
+msgstr ""
+
+msgid "deleted"
+msgstr ""

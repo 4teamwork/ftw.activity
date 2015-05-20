@@ -1,5 +1,6 @@
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from datetime import datetime
-from datetime import timedelta
 from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.activity.tests.pages import activity
 from ftw.builder import Builder
@@ -9,9 +10,9 @@ from ftw.testbrowser.pages import plone
 from ftw.testing import freeze
 from operator import attrgetter
 from plone import api
-from plone.app.testing import setRoles
 from plone.app.testing import login
 from plone.app.testing import logout
+from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.registry.interfaces import IRegistry
@@ -21,6 +22,7 @@ from zope.component import getUtility
 import transaction
 
 
+
 class TestActivityView(TestCase):
     layer = FUNCTIONAL_TESTING
 
@@ -28,25 +30,24 @@ class TestActivityView(TestCase):
         setRoles(self.layer['portal'], TEST_USER_ID, ['Manager'])
 
     @browsing
-    def test_shows_created_and_modified_objects(self, browser):
-        now = datetime(2010, 12, 28, 10, 35)
-        with freeze(now - timedelta(days=2)):
+    def test_shows_added_and_modified_objects(self, browser):
+        with freeze(datetime(2010, 12, 26, 10, 35)) as clock:
             folder = create(Builder('folder').titled('The Folder'))
 
-        with freeze(now - timedelta(days=1)):
+            clock.forward(days=1)
             folder.reindexObject()  # updates modified date
 
-        with freeze(now - timedelta(hours=1)):
+            clock.forward(days=1)
             file_ = create(Builder('file').titled('The First File'))
 
-        with freeze(now):
+            clock.forward(hours=1)
             browser.login().open(view='activity')
             self.assertEquals(2, len(activity.events()),
                               'Expected exactly two events')
 
             file_event, folder_event = activity.events()
             self.assertEquals(
-                'File created an hour ago by test_user_1_',
+                'File added an hour ago by test_user_1_',
                 file_event.byline)
             self.assertEquals('The First File', file_event.title)
             self.assertEquals('{0}/view'.format(file_.absolute_url()),
@@ -54,7 +55,7 @@ class TestActivityView(TestCase):
                               '/view should be appended for files')
 
             self.assertEquals(
-                'Folder modified yesterday by test_user_1_',
+                'Folder added day before by test_user_1_',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
             self.assertEquals(folder.absolute_url(), folder_event.url)
@@ -75,71 +76,37 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_fetch_more_events(self, browser):
-        pages = [create(Builder('page').titled('Zero')),
-                 create(Builder('page').titled('One')),
-                 create(Builder('page').titled('Two')),
-                 create(Builder('page').titled('Three'))]
+        with freeze(datetime(2010, 1, 2, 1)) as clock:
+            pages = [create(Builder('page').titled('Zero'))]
+            clock.backward(hours=1)
+            pages.append(create(Builder('page').titled('One')))
+            clock.backward(hours=1)
+            pages.append(create(Builder('page').titled('Two')))
+            clock.backward(hours=1)
+            pages.append(create(Builder('page').titled('Three')))
 
         start_after = pages[1].UID()
         browser.login().open(view='activity?last_uid={}'.format(start_after))
         self.assertEquals(['Two', 'Three'],
                           map(attrgetter('title'), activity.events()))
 
-    @browsing
-    def test_events_are_batched(self, browser):
-        now = datetime(2010, 12, 28, 10, 35)
+    def test_events_are_batched(self):
         pages = []
-        for index in range(6):
-            with freeze(now - timedelta(hours=index)):
+        with freeze(datetime(2010, 1, 2)) as clock:
+            for index in range(6):
+                clock.backward(hours=1)
                 pages.append(create(Builder('page')
                                     .titled('Page {0}'.format(index))))
 
         view = self.layer['portal'].restrictedTraverse('@@activity')
 
-        get_title = lambda repr: repr.context.Title()
+        get_title = lambda repr: repr['activity'].attrs['title']
         self.assertEquals(['Page 0', 'Page 1', 'Page 2'],
                           map(get_title, view.events(amount=3)))
 
         self.assertEquals(['Page 3', 'Page 4', 'Page 5'],
                           map(get_title,
                               view.events(amount=3, last_uid=pages[2].UID())))
-
-    @browsing
-    def test_collections_are_supported(self, browser):
-        collection = create(Builder('collection')
-                            .titled('The Collection')
-                            .from_query({'portal_type': 'Folder'})
-                            .having(sort_on='modified',
-                                    sort_reversed=True))
-
-        now = datetime(2010, 12, 28, 10, 35)
-        with freeze(now - timedelta(hours=1)):
-            create(Builder('page').titled('A Page'))
-            create(Builder('folder').titled('First Folder'))
-
-        with freeze(now - timedelta(hours=2)):
-            create(Builder('folder').titled('Second Folder'))
-
-        with freeze(now):
-            browser.login().open(collection, view='activity')
-        self.assertEquals(
-            ['First Folder', 'Second Folder'],
-            map(attrgetter('title'), activity.events()))
-
-    @browsing
-    def test_collections_show_editable_border_for_default_view(self, browser):
-        collection = create(Builder('collection')
-                            .titled('The Collection')
-                            .from_query({'portal_type': 'Collection'})
-                            .having(sort_on='modified',
-                                    sort_reversed=True))
-        collection._setProperty('layout', 'activity', 'string')
-        transaction.commit()
-
-        browser.login().open(collection)
-        self.assertEquals('activity', plone.view())
-        self.assertTrue(browser.css('.documentEditable'),
-                        'Editable border is not visible')
 
     @browsing
     def test_comments_do_not_break_activity_view(self, browser):
@@ -184,3 +151,29 @@ class TestActivityView(TestCase):
         browser.login().open(view='activity')
         self.assertEquals(1, len(activity.events()),
                           'Expected exactly one event')
+
+    @browsing
+    def test_delete_events_are_shown(self, browser):
+        with freeze(datetime(2010, 1, 2)) as clock:
+            page = create(Builder('page').titled('The Page'))
+
+            browser.login().open(view='activity')
+            self.assertEquals(
+                [{'title': 'The Page',
+                  'url': 'http://nohost/plone/the-page',
+                  'byline': 'Document added now by test_user_1_'}],
+                activity.events_infos())
+
+            clock.forward(hours=1)
+            aq_parent(aq_inner(page)).manage_delObjects([page.getId()])
+            transaction.commit()
+
+            browser.reload()
+            self.assertEquals(
+                [{'title': 'The Page',
+                  'url': None,
+                  'byline': 'Document deleted now by test_user_1_'},
+                 {'title': 'The Page',
+                  'url': None,
+                  'byline': 'Document added an hour ago by test_user_1_'}],
+                activity.events_infos())

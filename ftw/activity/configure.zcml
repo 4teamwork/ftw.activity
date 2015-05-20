@@ -3,32 +3,84 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:profilehook="http://namespaces.zope.org/profilehook"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     i18n_domain="ftw.activity">
 
-  <five:registerPackage package="." initialize=".initialize" />
-  <i18n:registerTranslations directory="locales" />
+    <include package="ftw.profilehook" />
 
-  <include package=".browser" />
-  <include package=".upgrades" />
+    <five:registerPackage package="." initialize=".initialize" />
+    <i18n:registerTranslations directory="locales" />
 
-  <browser:resourceDirectory
-      name="ftw.activity"
-      directory="resources" />
+    <include package=".browser" />
+    <include package=".catalog" />
 
-  <genericsetup:registerProfile
-      name="default"
-      title="ftw.activity"
-      directory="profiles/default"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
+    <browser:resourceDirectory
+        name="ftw.activity"
+        directory="resources" />
 
-  <genericsetup:registerProfile
-      name="uninstall"
-      title="ftw.activity"
-      directory="profiles/uninstall"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
-      />
+    <genericsetup:registerProfile
+        name="default"
+        title="ftw.activity"
+        directory="profiles/default"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+    <include package=".upgrades" />
+
+    <profilehook:hook
+        profile="ftw.activity:default"
+        handler=".hooks.installed"
+        />
+
+    <genericsetup:registerProfile
+        name="uninstall"
+        title="ftw.activity"
+        directory="profiles/uninstall"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        />
+
+    <profilehook:hook
+        profile="ftw.activity:uninstall"
+        handler=".hooks.uninstalled"
+        />
+
+    <!-- archetypes -->
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             Products.Archetypes.interfaces.IObjectInitializedEvent"
+        handler=".subscribers.make_object_added_activity"
+        />
+
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             Products.Archetypes.interfaces.IObjectEditedEvent"
+        handler=".subscribers.make_object_changed_activity"
+        />
+
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             zope.container.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.make_object_deleted_activity"
+        />
+
+    <!-- dexterity -->
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectAddedEvent"
+        handler=".subscribers.make_object_added_activity"
+        />
+
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+        handler=".subscribers.make_object_changed_activity"
+        />
+
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.make_object_deleted_activity"
+        />
 
 </configure>

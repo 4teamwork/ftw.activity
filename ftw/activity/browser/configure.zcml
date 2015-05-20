@@ -3,36 +3,28 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     i18n_domain="ftw.activity">
 
-  <browser:page
-      for="*"
-      name="activity"
-      class=".activity.ActivityView"
-      permission="zope2.View"
-      allowed_attributes="fetch raw"
-      />
+    <browser:page
+        for="*"
+        name="activity"
+        class=".activity.ActivityView"
+        permission="zope2.View"
+        allowed_attributes="fetch raw"
+        />
 
-  <browser:page
-      for="plone.app.collection.interfaces.ICollection"
-      name="activity"
-      class=".activity.CollectionActivityView"
-      permission="zope2.View"
-      allowed_attributes="fetch raw"
-      />
+    <browser:page
+        for="*"
+        name="tabbedview_view-activity"
+        class=".tab.ActivityTab"
+        permission="zope2.View"
+        />
 
-  <browser:page
-      for="*"
-      name="tabbedview_view-activity"
-      class=".tab.ActivityTab"
-      permission="zope2.View"
-      />
+    <browser:page
+        for="*"
+        name="activity_macros"
+        permission="zope2.View"
+        template="templates/activity_macros.pt"
+        />
 
-  <browser:page
-      for="*"
-      name="activity_macros"
-      permission="zope2.View"
-      template="templates/activity_macros.pt"
-      />
-
-  <adapter factory=".representations.DefaultRepresentation" />
+    <adapter factory=".renderer.DefaultRenderer" name="default" />
 
 </configure>
