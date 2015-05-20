@@ -3,6 +3,7 @@ from Acquisition import aq_parent
 from DateTime import DateTime
 from datetime import datetime
 from ftw.activity.catalog.record import ActivityRecord
+from ftw.activity.interfaces import IActivityCreatedEvent
 from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.builder import Builder
 from ftw.builder import create
@@ -12,6 +13,10 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
+from zope.component import getGlobalSiteManager
+from zope.component import getSiteManager
+from zope.component import provideHandler
+from zope.interface import Interface
 
 
 class TestCatalog(TestCase):
@@ -20,6 +25,18 @@ class TestCatalog(TestCase):
     def setUp(self):
         self.portal = self.layer['portal']
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
+
+    def test_record_created_event_is_fired(self):
+        doc = create(Builder('document'))
+
+        events = []
+        getSiteManager().registerHandler(events.append, [IActivityCreatedEvent])
+
+        record = ActivityRecord(doc, 'added')
+        self.assertEquals(1, len(events), 'Expected exactly one event.')
+        event, = events
+        self.assertEquals(doc, event.object)
+        self.assertEquals(record, event.activity)
 
     def test_record_string_representation(self):
         record = ActivityRecord(create(Builder('document')), 'added')

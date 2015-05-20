@@ -1,11 +1,13 @@
 from AccessControl import getSecurityManager
 from collective.prettydate.interfaces import IPrettyDate
 from DateTime import DateTime
+from ftw.activity.events import ActivityCreatedEvent
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from souper.soup import Record
 from zope.component import getUtility
 from zope.component.hooks import getSite
+from zope.event import notify
 from zope.i18n import translate
 
 
@@ -20,6 +22,8 @@ class ActivityRecord(Record):
         self.attrs['actor'] = (actor_userid
                                or getSecurityManager().getUser().getId())
         self.attrs['date'] = date or DateTime()
+
+        notify(ActivityCreatedEvent(context, self))
 
     def get_object(self):
         reference_catalog = getToolByName(getSite(), 'reference_catalog')

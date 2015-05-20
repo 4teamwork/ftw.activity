@@ -141,6 +141,26 @@ the default activity macro and extend it:
   </metal:wrapper>
 
 
+Store additional information on activities
+==========================================
+
+The metadata stored on the activity record can be easily extended with an event handler:
+
+.. code:: ZCML
+
+    <subscriber
+        for="ftw.activity.interfaces.IActivityCreatedEvent"
+        handler=".subscribers.enhance_activity_record"
+        />
+
+.. code:: python
+
+    def enhance_activity_record(event):
+        record = event.activity
+        obj = event.object
+        record.attrs['creator'] = obj.Creator()
+
+
 Links
 =====
 
