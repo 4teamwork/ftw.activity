@@ -1,4 +1,5 @@
 from ftw.activity.catalog import get_activity_soup
+from ftw.activity.interfaces import IActivityFilter
 from ftw.activity.interfaces import IActivityRenderer
 from operator import itemgetter
 from plone.memoize import instance
@@ -41,6 +42,7 @@ class ActivityView(BrowserView):
         activities = self._lookup()
         if last_uid:
             activities = self._begin_after(last_uid, activities)
+        activities = self._filter_activities(activities)
         activities = self._batch_to(amount, activities)
         return self._lookup_renderers_for_activities(activities)
 
@@ -58,6 +60,14 @@ class ActivityView(BrowserView):
                 yield activity
             elif activity.attrs['uuid'] == last_uid:
                 found = True
+
+    def _filter_activities(self, activities):
+        filters = map(itemgetter(1),
+                      getAdapters((self.context, self.request, self), IActivityFilter))
+        filters.sort(key=lambda activity_filter: activity_filter.position())
+        for activity_filter in filters:
+            activities = activity_filter.process(activities)
+        return activities
 
     def _batch_to(self, amount, activities):
         for index, repr in enumerate(activities):

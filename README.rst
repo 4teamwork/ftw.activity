@@ -160,6 +160,52 @@ The metadata stored on the activity record can be easily extended with an event 
         obj = event.object
         record.attrs['creator'] = obj.Creator()
 
+Activity Filters
+================
+
+There may be various custom use cases which require activities to be dropped when rendering
+the activity view.
+For example system activities are recorded for internal purposes which should not show
+up in the activity feed.
+
+Activities can easily be filtered by registering an ``IActivityFilter`` adapter:
+
+.. code:: ZCML
+
+    <adapter factory=".activity.CustomActivityFilter" name="my.package-filter" />
+
+
+.. code:: python
+
+    from ftw.activity.interfaces import IActivityFilter
+    from zope.component import adapts
+    from zope.interface import implements
+    from zope.interface import Interface
+
+
+    class CustomActivityFilter(object):
+        implements(IActivityFilter)
+        adapts(Interface, Interface, Interface)
+
+        def __init__(self, context, request, view):
+            self.context = context
+            self.request = request
+            self.view = view
+
+        def position(self):
+            return 500
+
+        def process(self, activities):
+            for activity in activities:
+                if activity.attrs['action'] == 'custom-action':
+                    continue
+
+                yield activity
+
+There is a default ``FilterCloseChanges`` filter, which removes succeding "changed" activites
+of the same object which happen in less than 1 Minute between each activity.
+This is removes noise from the activity feed when a user edits the same object a lot in short
+time, for example when using an external editor.
 
 Links
 =====
