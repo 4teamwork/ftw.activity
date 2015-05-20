@@ -45,6 +45,9 @@
         handler=".hooks.uninstalled"
         />
 
+    <adapter factory=".filters.FilterCloseChanges"
+             name="ftw.activity:filter-close-changes" />
+
     <!-- archetypes -->
     <subscriber
         for="Products.Archetypes.interfaces.IBaseObject
