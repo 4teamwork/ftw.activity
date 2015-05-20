@@ -12,6 +12,7 @@ class ActivitySoupCatalogFactory(object):
     def __call__(self, context=None):
         catalog = Catalog()
         catalog[u'path'] = CatalogPathIndex(NodeAttributeIndexer(u'path'))
+        catalog[u'uuid'] = CatalogFieldIndex(NodeAttributeIndexer(u'uuid'))
         catalog[u'portal_type'] = CatalogFieldIndex(NodeAttributeIndexer(
                 u'portal_type'))
         catalog[u'action'] = CatalogFieldIndex(NodeAttributeIndexer(u'action'))
