@@ -96,6 +96,8 @@ Example ZCML registration:
 
 Implement the adapter (``activity.py``):
 
+.. code:: python
+
     from ftw.activity.interfaces import IActivityRenderer
     from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
     from zope.component import adapts
@@ -146,7 +148,7 @@ Store additional information on activities
 
 The metadata stored on the activity record can be easily extended with an event handler:
 
-.. code:: ZCML
+.. code:: xml
 
     <subscriber
         for="ftw.activity.interfaces.IActivityCreatedEvent"
@@ -170,7 +172,7 @@ up in the activity feed.
 
 Activities can easily be filtered by registering an ``IActivityFilter`` adapter:
 
-.. code:: ZCML
+.. code:: xml
 
     <adapter factory=".activity.CustomActivityFilter" name="my.package-filter" />
 
