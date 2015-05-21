@@ -18,12 +18,12 @@
     more.click(function(event) {
       event.preventDefault();
 
-      var last_uid = events.find('.event:last').data('uid');
+      var last_activity = events.find('.event:last').data('activity-id');
       var url = $('base').attr('href');
       if (url.slice(-1) !== '/') {
         url += '/';
       }
-      url += "activity/fetch?last_uid=".concat(last_uid);
+      url += "activity/fetch?last_activity=".concat(last_activity);
 
       $.get(url, function(data) {
         if(data.trim().length) {
