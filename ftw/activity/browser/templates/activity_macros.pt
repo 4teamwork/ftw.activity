@@ -22,7 +22,7 @@
                            url obj/absolute_url|string:;
                            url python:use_view and url + '/view' or url;"
                tal:attributes="href url"
-               tal:omit-tag="not:obj"
+               tal:omit-tag="not:nocall:obj"
                tal:content="activity/attrs/title" />
         </metal:TITLE>
     </div>
