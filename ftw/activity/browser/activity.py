@@ -83,8 +83,8 @@ class ActivityView(BrowserView):
                    'activity': activity,
                    'classes': ('event activity-action-{0}'
                                ' activity-contenttype-{1}'.format(
-                        activity.attrs['action'],
-                        activity.attrs['portal_type'])),
+                        normalizeString(activity.attrs['action']),
+                        normalizeString(activity.attrs['portal_type']))),
                    'obj': obj,
                    'render': self._find_renderer_for_activity(activity, obj)}
 
