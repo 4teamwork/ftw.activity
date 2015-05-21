@@ -7,6 +7,10 @@ class Event(object):
         self.node = node
 
     @property
+    def activity_id(self):
+        return self.node.attrib['data-activity-id']
+
+    @property
     def title(self):
         return self.node.css('.title').first.text
 

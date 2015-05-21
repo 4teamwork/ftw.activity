@@ -1,6 +1,8 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
 from datetime import datetime
+from ftw.activity.catalog import get_activity_soup
+from ftw.activity.catalog import object_changed
 from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.activity.tests.pages import activity
 from ftw.builder import Builder
@@ -76,19 +78,47 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_fetch_more_events(self, browser):
-        with freeze(datetime(2010, 1, 2, 1)) as clock:
-            pages = [create(Builder('page').titled('Zero'))]
-            clock.backward(hours=1)
-            pages.append(create(Builder('page').titled('One')))
-            clock.backward(hours=1)
-            pages.append(create(Builder('page').titled('Two')))
-            clock.backward(hours=1)
-            pages.append(create(Builder('page').titled('Three')))
+        foo = create(Builder('page').titled('Foo'))
+        bar = create(Builder('page').titled('Bar'))
+        get_activity_soup().clear()
 
-        start_after = pages[1].UID()
-        browser.login().open(view='activity?last_uid={}'.format(start_after))
-        self.assertEquals(['Two', 'Three'],
-                          map(attrgetter('title'), activity.events()))
+        with freeze(datetime(2010, 1, 2, 1)) as clock:
+            def touch(obj):
+                obj.setTitle(obj.Title() + '*')
+                object_changed(obj)
+                clock.forward(hours=1)
+
+            touch(foo)
+            touch(bar)
+            touch(foo)
+            touch(bar)
+            touch(foo)
+            touch(bar)
+
+        transaction.commit()
+
+        browser.login().open(view='activity?amount_of_events=2')
+        events = activity.events()
+        self.assertEquals(['Bar***', 'Foo***'],
+                          map(attrgetter('title'), events))
+
+        browser.open(view='activity?amount_of_events=2&last_activity={0}'.format(
+                events[-1].activity_id))
+        events = activity.events()
+        self.assertEquals(['Bar**', 'Foo**'],
+                          map(attrgetter('title'), events))
+
+        browser.open(view='activity?amount_of_events=2&last_activity={0}'.format(
+                events[-1].activity_id))
+        events = activity.events()
+        self.assertEquals(['Bar*', 'Foo*'],
+                          map(attrgetter('title'), events))
+
+        browser.open(view='activity?amount_of_events=2&last_activity={0}'.format(
+                events[-1].activity_id))
+        events = activity.events()
+        self.assertEquals([],
+                          map(attrgetter('title'), events))
 
     def test_events_are_batched(self):
         pages = []
@@ -101,12 +131,13 @@ class TestActivityView(TestCase):
         view = self.layer['portal'].restrictedTraverse('@@activity')
 
         get_title = lambda repr: repr['activity'].attrs['title']
+        events = list(view.events(amount=3))
         self.assertEquals(['Page 0', 'Page 1', 'Page 2'],
-                          map(get_title, view.events(amount=3)))
+                          map(get_title, events))
 
+        events = list(view.events(amount=3, last_activity=events[-1]['activity_id']))
         self.assertEquals(['Page 3', 'Page 4', 'Page 5'],
-                          map(get_title,
-                              view.events(amount=3, last_uid=pages[2].UID())))
+                          map(get_title, events))
 
     @browsing
     def test_comments_do_not_break_activity_view(self, browser):

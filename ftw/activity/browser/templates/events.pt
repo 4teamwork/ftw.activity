@@ -1,7 +1,7 @@
 <tal:DOMAIN i18n:domain="ftw.activity">
 
     <tal:EVENTS repeat="repr view/events">
-        <div tal:attributes="data-uid repr/uid;
+        <div tal:attributes="data-activity-id repr/activity_id;
                              class repr/classes"
              tal:content="structure repr/render" />
     </tal:EVENTS>

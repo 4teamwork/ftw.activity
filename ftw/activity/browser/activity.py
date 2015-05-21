@@ -20,7 +20,7 @@ class ActivityView(BrowserView):
         return self.activity_template()
 
     def fetch(self):
-        """Action for retrieving more events (based on `last_uid` in
+        """Action for retrieving more events (based on `last_activity` in
         the request) with AJAX.
         """
         self.request.response.setHeader('X-Theme-Disabled', 'True')
@@ -36,12 +36,12 @@ class ActivityView(BrowserView):
         """
         return self.raw_template()
 
-    def events(self, amount=None, last_uid=None):
-        amount = amount or self.request.get('amount_of_events', 10)
-        last_uid = last_uid or self.request.get('last_uid', None)
+    def events(self, amount=None, last_activity=None):
+        amount = int(amount or self.request.get('amount_of_events', 10))
+        last_activity = last_activity or self.request.get('last_activity', None)
         activities = self._lookup()
-        if last_uid:
-            activities = self._begin_after(last_uid, activities)
+        if last_activity:
+            activities = self._begin_after(int(last_activity), activities)
         activities = self._filter_activities(activities)
         activities = self._batch_to(amount, activities)
         return self._lookup_renderers_for_activities(activities)
@@ -53,12 +53,12 @@ class ActivityView(BrowserView):
         soup = get_activity_soup()
         return soup.query(self.query(), sort_index='date', reverse=True)
 
-    def _begin_after(self, last_uid, activities):
+    def _begin_after(self, last_activity, activities):
         found = False
         for activity in activities:
             if found:
                 yield activity
-            elif activity.attrs['uuid'] == last_uid:
+            elif activity.intid == last_activity:
                 found = True
 
     def _filter_activities(self, activities):
@@ -79,7 +79,7 @@ class ActivityView(BrowserView):
         for activity in activities:
             obj = activity.get_object()
 
-            yield {'uid': activity.attrs['uuid'],
+            yield {'activity_id': activity.intid,
                    'activity': activity,
                    'classes': ('event activity-action-{0}'
                                ' activity-contenttype-{1}'.format(
