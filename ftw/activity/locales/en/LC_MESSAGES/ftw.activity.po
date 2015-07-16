@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-05-19 11:21+0000\n"
+"POT-Creation-Date: 2015-07-16 09:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,19 +15,21 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 
 msgid "added"
-msgstr "added"
+msgstr "Added"
 
-#. Default: "${portal_type} ${action} ${when} by ${actor}"
-#: ./ftw/activity/browser/templates/activity_macros.pt:33
+#. Default: "${action} ${when} by ${actor}"
+#: ./ftw/activity/browser/templates/activity_macros.pt:48
 msgid "byline_text"
-msgstr "${portal_type} ${action} ${when} by ${actor}"
+msgstr "${action} ${when} by ${actor}"
 
 msgid "changed"
-msgstr "changed"
+msgstr "Changed"
 
 msgid "deleted"
-msgstr "deleted"
+msgstr "Deleted"
 
 #: ./ftw/activity/browser/templates/activity_raw.pt:4
 msgid "more_link_label"
 msgstr "More"
+
+

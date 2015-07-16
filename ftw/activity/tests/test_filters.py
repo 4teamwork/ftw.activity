@@ -41,7 +41,7 @@ class TestCloseChangesFilters(TestCase):
 
             browser.login().open(view='activity')
             self.assertEquals(
-                ['Document changed now by test_user_1_',
-                 'Document changed an hour ago by test_user_1_',
-                 'Document added an hour ago by test_user_1_'],
+                ['Changed now by test_user_1_',
+                 'Changed an hour ago by test_user_1_',
+                 'Added an hour ago by test_user_1_'],
                 map(attrgetter('byline'), activity.events()))

@@ -32,10 +32,6 @@
     <div class="byline">
         <metal:BYLINE metal:define-slot="byline"
                       i18n:translate="byline_text">
-            <span class="portal_type"
-                  i18n:name="portal_type"
-                  tal:content="activity/translated_portal_type" />
-
             <span class="action"
                   i18n:name="action"
                   tal:content="activity/attrs/action"

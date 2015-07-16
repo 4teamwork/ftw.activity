@@ -49,7 +49,7 @@ class TestActivityView(TestCase):
 
             file_event, folder_event = activity.events()
             self.assertEquals(
-                'File added an hour ago by test_user_1_',
+                'Added an hour ago by test_user_1_',
                 file_event.byline)
             self.assertEquals('The First File', file_event.title)
             self.assertEquals('{0}/view'.format(file_.absolute_url()),
@@ -57,7 +57,7 @@ class TestActivityView(TestCase):
                               '/view should be appended for files')
 
             self.assertEquals(
-                'Folder added day before by test_user_1_',
+                'Added day before by test_user_1_',
                 folder_event.byline)
             self.assertEquals('The Folder', folder_event.title)
             self.assertEquals(folder.absolute_url(), folder_event.url)
@@ -192,7 +192,7 @@ class TestActivityView(TestCase):
             self.assertEquals(
                 [{'title': 'The Page',
                   'url': 'http://nohost/plone/the-page',
-                  'byline': 'Document added now by test_user_1_'}],
+                  'byline': 'Added now by test_user_1_'}],
                 activity.events_infos())
 
             clock.forward(hours=1)
@@ -203,8 +203,8 @@ class TestActivityView(TestCase):
             self.assertEquals(
                 [{'title': 'The Page',
                   'url': None,
-                  'byline': 'Document deleted now by test_user_1_'},
+                  'byline': 'Deleted now by test_user_1_'},
                  {'title': 'The Page',
                   'url': None,
-                  'byline': 'Document added an hour ago by test_user_1_'}],
+                  'byline': 'Added an hour ago by test_user_1_'}],
                 activity.events_infos())
