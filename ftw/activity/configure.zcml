@@ -48,6 +48,18 @@
     <adapter factory=".filters.FilterCloseChanges"
              name="ftw.activity:filter-close-changes" />
 
+    <subscriber
+        for="*
+             Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+        handler=".subscribers.make_object_transition_activity"
+        />
+
+    <subscriber
+        for="*
+             OFS.interfaces.IObjectClonedEvent"
+        handler=".subscribers.make_object_added_activity"
+        />
+
     <!-- archetypes -->
     <subscriber
         for="Products.Archetypes.interfaces.IBaseObject
@@ -84,12 +96,6 @@
         for="plone.dexterity.interfaces.IDexterityContent
              zope.lifecycleevent.interfaces.IObjectRemovedEvent"
         handler=".subscribers.make_object_deleted_activity"
-        />
-
-    <subscriber
-        for="*
-             Products.DCWorkflow.interfaces.IAfterTransitionEvent"
-        handler=".subscribers.make_object_transition_activity"
         />
 
 </configure>

@@ -29,6 +29,7 @@ def object_deleted(context, actor_userid=None, date=None):
                             actor_userid=actor_userid, date=date)
     return soup.add(record)
 
+
 def object_transition(context, actor_userid=None, date=None,
                       transition=None, workflow=None,
                       old_state=None, new_state=None):

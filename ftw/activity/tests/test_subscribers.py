@@ -82,3 +82,20 @@ class TestSubscribers(TestCase):
 
             get_soup_activities(('path', 'action', 'transition', 'workflow',
                                  'old_state', 'new_state')))
+
+    def test_activity_for_object_copied_is_added(self):
+        folder = create(Builder('folder'))
+        doc = create(Builder('document').within(folder))
+
+        clipboard = folder.manage_copyObjects(doc.getId())
+        folder.manage_pasteObjects(clipboard)
+
+        self.assertEquals(
+            [{'path': '/plone/folder',
+              'action': 'added'},
+             {'path': '/plone/folder/document',
+              'action': 'added'},
+             {'path': '/plone/folder/copy_of_document',
+              'action': 'added'}],
+
+            get_soup_activities(('path', 'action')))
