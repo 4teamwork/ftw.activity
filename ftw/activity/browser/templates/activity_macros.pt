@@ -64,6 +64,29 @@
 
     <div class="body">
         <metal:BODY metal:define-slot="body">
+
+            <metal:TRANSITION_ACTIVITY tal:condition="python: activity.attrs['action'] == 'transition'">
+                <div class="transition-activity-body">
+                    <div class="transition"
+                         tal:content="activity/attrs/transition"
+                         i18n:domain="plone"
+                         i18n:translate="" />
+                    <div class="states">
+                        <span class="old-state"
+                              tal:content="activity/attrs/old_state"
+                              i18n:domain="plone"
+                              i18n:translate="" />
+
+                        <span class="states-seperator">&raquo;</span>
+
+                        <span class="new-state"
+                              tal:content="activity/attrs/new_state"
+                              i18n:domain="plone"
+                              i18n:translate="" />
+                    </div>
+                </div>
+            </metal:TRANSITION_ACTIVITY>
+
         </metal:BODY>
     </div>
 
