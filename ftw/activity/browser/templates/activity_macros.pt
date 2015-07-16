@@ -1,7 +1,10 @@
 <metal:wrapper define-macro="event" i18n:domain="ftw.activity"
                tal:define="activity nocall:activity|nocall:options/activity;
                            obj nocall:obj|nocall:options/obj;
-                           actor activity/get_actor_info">
+                           actor activity/get_actor_info;
+                           normalizeString nocall:context/@@plone/normalizeString;
+                           portal_type python:activity.attrs['portal_type'];
+                           icon_class python:'contenttype-'  + normalizeString(portal_type)">
 
     <metal:ABOVE_AVATAR metal:define-slot="above-avatar" />
 
@@ -16,14 +19,18 @@
 
     <div class="title">
         <metal:TITLE metal:define-slot="title">
-            <a tal:define="site_properties here/portal_properties/site_properties;
-                           view_actions site_properties/typesUseViewActionInListings|python:();
-                           use_view python:activity.attrs['portal_type'] in view_actions;
-                           url obj/absolute_url|string:;
-                           url python:use_view and url + '/view' or url;"
-               tal:attributes="href url"
-               tal:omit-tag="not:nocall:obj"
-               tal:content="activity/attrs/title" />
+            <span tal:attributes="class icon_class"
+                  tal:omit-tag="nocall:obj">
+                <a tal:define="site_properties here/portal_properties/site_properties;
+                               view_actions site_properties/typesUseViewActionInListings|python:();
+                               use_view python:activity.attrs['portal_type'] in view_actions;
+                               url obj/absolute_url|string:;
+                               url python:use_view and url + '/view' or url;"
+                   tal:attributes="href url;
+                                   class icon_class"
+                   tal:omit-tag="not:nocall:obj"
+                   tal:content="activity/attrs/title" />
+            </span>
         </metal:TITLE>
     </div>
 
