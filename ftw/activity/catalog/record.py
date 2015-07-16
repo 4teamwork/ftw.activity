@@ -2,6 +2,7 @@ from AccessControl import getSecurityManager
 from collective.prettydate.interfaces import IPrettyDate
 from DateTime import DateTime
 from ftw.activity.events import ActivityCreatedEvent
+from plone.app.uuid.utils import uuidToObject
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from souper.soup import Record
@@ -26,8 +27,8 @@ class ActivityRecord(Record):
         notify(ActivityCreatedEvent(context, self))
 
     def get_object(self):
-        reference_catalog = getToolByName(getSite(), 'reference_catalog')
-        return reference_catalog.lookupObject(self.attrs['uuid'])
+        obj = uuidToObject(self.attrs['uuid'])
+        return obj
 
     def get_actor_info(self):
         membership = getToolByName(getSite(), 'portal_membership')

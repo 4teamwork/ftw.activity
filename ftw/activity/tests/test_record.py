@@ -43,7 +43,7 @@ class TestCatalog(TestCase):
         self.assertEquals('<ActivityRecord "added" for "/plone/document">',
                           str(record))
 
-    def test_get_object_of_record(self):
+    def test_get_object_of_record__archetypes(self):
         doc = create(Builder('document').titled('Foo'))
         record = ActivityRecord(doc, 'added')
 
@@ -54,6 +54,21 @@ class TestCatalog(TestCase):
                           'get_object should return None if the object is deleted.')
 
         create(Builder('document').titled('Foo'))
+        self.assertEquals(None, record.get_object(),
+                          'get_object should return None when the object at the path'
+                          ' is not the same object.')
+
+    def test_get_object_of_record__dexterity(self):
+        doc = create(Builder('dx type').titled(u'Foo'))
+        record = ActivityRecord(doc, 'added')
+
+        self.assertEquals(doc, record.get_object())
+
+        aq_parent(aq_inner(doc)).manage_delObjects([doc.getId()])
+        self.assertEquals(None, record.get_object(),
+                          'get_object should return None if the object is deleted.')
+
+        create(Builder('dx type').titled(u'Foo'))
         self.assertEquals(None, record.get_object(),
                           'get_object should return None when the object at the path'
                           ' is not the same object.')
