@@ -9,6 +9,7 @@
       return;
     }
 
+    var fetch_url = events.data('fetch-url');
     var more = $('<a />').
         attr('href', '#').
         addClass('more-button').
@@ -19,11 +20,7 @@
       event.preventDefault();
 
       var last_activity = events.find('.event:last').data('activity-id');
-      var url = $('base').attr('href');
-      if (url.slice(-1) !== '/') {
-        url += '/';
-      }
-      url += "activity/fetch?last_activity=".concat(last_activity);
+      var url = fetch_url + "?last_activity=".concat(last_activity);
 
       $.get(url, function(data) {
         if(data.trim().length) {

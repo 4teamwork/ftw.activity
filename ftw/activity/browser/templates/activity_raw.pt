@@ -2,6 +2,7 @@
 
   <div class="activity">
     <div class="events"
+         tal:attributes="data-fetch-url fetch_url|string:${context/@@plone_context_state/current_base_url}/fetch"
          i18n:attributes="data-more-label more_link_label">
 
       <tal:EVENTS tal:replace="structure view/events_template" />
