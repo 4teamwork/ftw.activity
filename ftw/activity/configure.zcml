@@ -79,6 +79,12 @@
         handler=".subscribers.make_object_deleted_activity"
         />
 
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseObject
+             zope.lifecycleevent.interfaces.IObjectMovedEvent"
+        handler=".subscribers.make_object_moved_activity"
+        />
+
     <!-- dexterity -->
     <subscriber
         for="plone.dexterity.interfaces.IDexterityContent
@@ -96,6 +102,12 @@
         for="plone.dexterity.interfaces.IDexterityContent
              zope.lifecycleevent.interfaces.IObjectRemovedEvent"
         handler=".subscribers.make_object_deleted_activity"
+        />
+
+    <subscriber
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectMovedEvent"
+        handler=".subscribers.make_object_moved_activity"
         />
 
 </configure>

@@ -1,5 +1,6 @@
 from collective.lastmodifier.interfaces import ILastModifier
 from ftw.activity.catalog.record import ActivityRecord
+from plone.uuid.interfaces import IUUID
 from souper.soup import get_soup
 from zope.component import queryAdapter
 from zope.component.hooks import getSite
@@ -40,6 +41,25 @@ def object_transition(context, actor_userid=None, date=None,
     record.attrs['workflow'] = workflow
     record.attrs['old_state'] = old_state
     record.attrs['new_state'] = new_state
+    return soup.add(record)
+
+
+def object_moved(context, actor_userid=None, date=None,
+                 old_parent=None, new_parent=None):
+    soup = get_activity_soup()
+    record = ActivityRecord(context, 'moved',
+                            actor_userid=actor_userid, date=date)
+
+    if old_parent:
+        record.attrs['old_parent_path'] = '/'.join(
+            old_parent.getPhysicalPath())
+        record.attrs['old_parent_uuid'] = IUUID(old_parent)
+
+    if new_parent:
+        record.attrs['new_parent_path'] = '/'.join(
+            new_parent.getPhysicalPath())
+        record.attrs['new_parent_uuid'] = IUUID(new_parent)
+
     return soup.add(record)
 
 

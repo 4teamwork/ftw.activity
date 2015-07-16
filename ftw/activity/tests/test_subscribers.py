@@ -4,6 +4,7 @@ from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.activity.tests.helpers import get_soup_activities
 from ftw.builder import Builder
 from ftw.builder import create
+from ftw.testing import staticuid
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from Products.Archetypes.event import ObjectEditedEvent
@@ -96,6 +97,51 @@ class TestSubscribers(TestCase):
              {'path': '/plone/folder/document',
               'action': 'added'},
              {'path': '/plone/folder/copy_of_document',
+              'action': 'added'}],
+
+            get_soup_activities(('path', 'action')))
+
+    @staticuid()
+    def test_moving_objects(self):
+        source = create(Builder('folder').titled('Source'))
+        target = create(Builder('folder').titled('Target'))
+        doc = create(Builder('document').within(source))
+
+        clipboard = source.manage_cutObjects(doc.getId())
+        target.manage_pasteObjects(clipboard)
+
+        self.assertEquals(
+            [{'action': 'added', 'path': '/plone/source'},
+             {'action': 'added', 'path': '/plone/target'},
+             {'action': 'added', 'path': '/plone/source/document'},
+             {'action': 'moved', 'path': '/plone/target/document',
+              'old_parent_path': '/plone/source',
+              'old_parent_uuid': 'testmovingobjects000000000000001',
+              'new_parent_path': '/plone/target',
+              'new_parent_uuid': 'testmovingobjects000000000000002'}],
+
+            get_soup_activities(('path',
+                                 'action',
+                                 'old_parent_path',
+                                 'old_parent_uuid',
+                                 'new_parent_path',
+                                 'new_parent_uuid')))
+
+    def test_renaming_object_creates_no_record(self):
+        # Renaming means changing the ID / URL of a content,
+        # but not changing it's title.
+        # Since this is normally not important for the common user,
+        # we don't create records in this case.
+        # There is no profound reason though.
+
+        folder = create(Builder('folder'))
+        create(Builder('document').titled(u'Foo').within(folder))
+        folder.manage_renameObject('foo', 'bar')
+
+        self.assertEquals(
+            [{'path': '/plone/folder',
+              'action': 'added'},
+             {'path': '/plone/folder/foo',
               'action': 'added'}],
 
             get_soup_activities(('path', 'action')))

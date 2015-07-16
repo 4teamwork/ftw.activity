@@ -22,3 +22,9 @@ msgstr ""
 
 msgid "deleted"
 msgstr ""
+
+msgid "moved"
+msgstr ""
+
+msgid "transition"
+msgstr ""

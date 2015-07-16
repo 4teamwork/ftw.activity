@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-07-16 09:46+0000\n"
+"POT-Creation-Date: 2015-07-16 12:25+0000\n"
 "PO-Revision-Date: 2015-05-19 13:24+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgid "added"
 msgstr "Hinzugefügt"
 
 #. Default: "${action} ${when} by ${actor}"
-#: ./ftw/activity/browser/templates/activity_macros.pt:48
+#: ./ftw/activity/browser/templates/activity_macros.pt:55
 msgid "byline_text"
 msgstr " ${action} durch ${actor} ${when}"
 
@@ -31,3 +31,9 @@ msgstr "Gelöscht"
 #: ./ftw/activity/browser/templates/activity_raw.pt:4
 msgid "more_link_label"
 msgstr "Mehr"
+
+msgid "moved"
+msgstr "Verschoben"
+
+msgid "transition"
+msgstr "Statusänderung"
