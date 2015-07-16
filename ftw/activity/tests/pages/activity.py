@@ -33,7 +33,7 @@ class Event(object):
 
 
 def events(browser=browser):
-    return map(Event, browser.css('.activity .events .event'))
+    return map(Event, browser.css('.event'))
 
 
 def events_infos(browser=browser):
