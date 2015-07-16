@@ -29,6 +29,18 @@ def object_deleted(context, actor_userid=None, date=None):
                             actor_userid=actor_userid, date=date)
     return soup.add(record)
 
+def object_transition(context, actor_userid=None, date=None,
+                      transition=None, workflow=None,
+                      old_state=None, new_state=None):
+    soup = get_activity_soup()
+    record = ActivityRecord(context, 'transition',
+                            actor_userid=actor_userid, date=date)
+    record.attrs['transition'] = transition
+    record.attrs['workflow'] = workflow
+    record.attrs['old_state'] = old_state
+    record.attrs['new_state'] = new_state
+    return soup.add(record)
+
 
 def index_object(obj):
     """Indexes an object when it was never indexed.

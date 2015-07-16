@@ -86,4 +86,10 @@
         handler=".subscribers.make_object_deleted_activity"
         />
 
+    <subscriber
+        for="*
+             Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+        handler=".subscribers.make_object_transition_activity"
+        />
+
 </configure>
