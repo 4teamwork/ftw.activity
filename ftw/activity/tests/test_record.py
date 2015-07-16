@@ -13,10 +13,7 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
-from zope.component import getGlobalSiteManager
 from zope.component import getSiteManager
-from zope.component import provideHandler
-from zope.interface import Interface
 
 
 class TestCatalog(TestCase):

@@ -38,7 +38,8 @@ class ActivityView(BrowserView):
 
     def events(self, amount=None, last_activity=None):
         amount = int(amount or self.request.get('amount_of_events', 10))
-        last_activity = last_activity or self.request.get('last_activity', None)
+        last_activity = last_activity or self.request.get(
+            'last_activity', None)
         activities = self._lookup()
         if last_activity:
             activities = self._begin_after(int(last_activity), activities)
@@ -63,7 +64,8 @@ class ActivityView(BrowserView):
 
     def _filter_activities(self, activities):
         filters = map(itemgetter(1),
-                      getAdapters((self.context, self.request, self), IActivityFilter))
+                      getAdapters((self.context, self.request, self),
+                                  IActivityFilter))
         filters.sort(key=lambda activity_filter: activity_filter.position())
         for activity_filter in filters:
             activities = activity_filter.process(activities)

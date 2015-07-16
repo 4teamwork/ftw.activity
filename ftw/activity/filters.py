@@ -34,7 +34,8 @@ class FilterCloseChanges(object):
         if not newer:
             return True
 
-        if this.attrs['action'] != 'changed' or newer.attrs['action'] != 'changed':
+        if this.attrs['action'] != 'changed' \
+           or newer.attrs['action'] != 'changed':
             return True
 
         if this.attrs['uuid'] != newer.attrs['uuid']:

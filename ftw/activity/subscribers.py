@@ -15,6 +15,6 @@ def make_object_changed_activity(context, event):
 def make_object_deleted_activity(context, event):
     # When deleting the Plone Site, getSite() is None
     # and we can abort recording activities.
-    if getSite() == None:
+    if getSite() is None:
         return None
     object_deleted(context)

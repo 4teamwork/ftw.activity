@@ -65,15 +65,15 @@ class IActivityFilter(Interface):
     """An activity filter can filter activities so that they do not appear
     in the activity view.
 
-    The filters are chained into a pipeline of filters, each filter can drop any
-    activity based on its own conditions.
+    The filters are chained into a pipeline of filters, each filter can drop
+    any activity based on its own conditions.
 
     The filters should be implemented as generators because of performance.
 
     The filters are ordered by their ``position`` in the pipeline.
 
-    Each activity filter is a named multi-adapter, adapting context, request and
-    the activity view.
+    Each activity filter is a named multi-adapter, adapting context, request
+    and the activity view.
     """
 
     def __init__(context, request, view):
@@ -87,12 +87,13 @@ class IActivityFilter(Interface):
         """
 
     def process(activities):
-        """The process method is called with a iterable (generator) of activity records.
-        The method is expected to yield all activities which should be kept and drop
-        unwanted activites by doing nothing with them.
+        """The process method is called with a iterable (generator) of activity
+        records.
+        The method is expected to yield all activities which should be kept and
+        drop unwanted activites by doing nothing with them.
 
         The process method may try to get the object of each activity.
-        The method should be implemented as generator, otherwise it will break the lazy
-        batching and result in processing all activities, even when they are not rendered
-        because of the batching.
+        The method should be implemented as generator, otherwise it will break
+        the lazy batching and result in processing all activities, even when
+        they are not rendered because of the batching.
         """
