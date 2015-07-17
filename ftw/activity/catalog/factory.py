@@ -1,9 +1,11 @@
+from ftw.activity.interfaces import IActivitySoupCatalogFactoryExtension
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.indexes.field import CatalogFieldIndex
-from repoze.catalog.indexes.path import CatalogPathIndex
 from repoze.catalog.indexes.keyword import CatalogKeywordIndex
+from repoze.catalog.indexes.path import CatalogPathIndex
 from souper.interfaces import ICatalogFactory
 from souper.soup import NodeAttributeIndexer
+from zope.component import getAdapters
 from zope.interface import implements
 
 
@@ -21,4 +23,9 @@ class ActivitySoupCatalogFactory(object):
         catalog[u'action'] = CatalogFieldIndex(NodeAttributeIndexer(u'action'))
         catalog[u'actor'] = CatalogFieldIndex(NodeAttributeIndexer(u'actor'))
         catalog[u'date'] = CatalogFieldIndex(NodeAttributeIndexer(u'date'))
+
+        for name, adapter in sorted(getAdapters(
+                (catalog,), IActivitySoupCatalogFactoryExtension)):
+            adapter()
+
         return catalog
