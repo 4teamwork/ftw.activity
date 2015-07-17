@@ -1,4 +1,4 @@
-from ftw.activity.catalog import get_activity_soup
+from ftw.activity.catalog import query_soup
 from ftw.activity.interfaces import IActivityFilter
 from ftw.activity.interfaces import IActivityRenderer
 from operator import itemgetter
@@ -51,8 +51,7 @@ class ActivityView(BrowserView):
         return Eq('path', '/'.join(self.context.getPhysicalPath()))
 
     def _lookup(self):
-        soup = get_activity_soup()
-        return soup.query(self.query(), sort_index='date', reverse=True)
+        return query_soup(self.query(), sort_index='date', reverse=True)
 
     def _begin_after(self, last_activity, activities):
         found = False

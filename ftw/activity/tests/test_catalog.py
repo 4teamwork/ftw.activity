@@ -4,6 +4,7 @@ from ftw.activity.catalog import get_activity_soup
 from ftw.activity.catalog import object_added
 from ftw.activity.catalog import object_changed
 from ftw.activity.catalog import object_deleted
+from ftw.activity.catalog import query_soup
 from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.builder import Builder
 from ftw.builder import create
@@ -82,7 +83,7 @@ class TestCatalog(TestCase):
             object_changed(document)
 
         results = map(lambda record: (record.attrs['action'], record.attrs['date']),
-                      soup.query(Eq('action', 'changed'),
+                      query_soup(Eq('action', 'changed'),
                                  sort_index='date',
                                  reverse=True))
 
@@ -100,7 +101,7 @@ class TestCatalog(TestCase):
         map(object_added, (folder, doc1, doc2))
 
         results = map(lambda record: record.attrs['path'],
-                      soup.query(Eq('path', '/'.join(folder.getPhysicalPath()))))
+                      query_soup(Eq('path', '/'.join(folder.getPhysicalPath()))))
 
         self.assertItemsEqual(['/plone/folder', '/plone/folder/one'],
                               results)

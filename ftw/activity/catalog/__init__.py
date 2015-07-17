@@ -6,6 +6,11 @@ from zope.component import queryAdapter
 from zope.component.hooks import getSite
 
 
+def query_soup(queryobject, **kwargs):
+    soup = get_activity_soup()
+    return soup.query(queryobject, **kwargs)
+
+
 def get_activity_soup():
     return get_soup('activity', getSite())
 
