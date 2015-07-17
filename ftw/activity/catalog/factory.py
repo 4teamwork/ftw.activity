@@ -1,6 +1,7 @@
 from repoze.catalog.catalog import Catalog
 from repoze.catalog.indexes.field import CatalogFieldIndex
 from repoze.catalog.indexes.path import CatalogPathIndex
+from repoze.catalog.indexes.keyword import CatalogKeywordIndex
 from souper.interfaces import ICatalogFactory
 from souper.soup import NodeAttributeIndexer
 from zope.interface import implements
@@ -11,6 +12,8 @@ class ActivitySoupCatalogFactory(object):
 
     def __call__(self, context=None):
         catalog = Catalog()
+        catalog[u'allowed_roles_and_users'] = CatalogKeywordIndex(
+            NodeAttributeIndexer(u'allowed_roles_and_users'))
         catalog[u'path'] = CatalogPathIndex(NodeAttributeIndexer(u'path'))
         catalog[u'uuid'] = CatalogFieldIndex(NodeAttributeIndexer(u'uuid'))
         catalog[u'portal_type'] = CatalogFieldIndex(NodeAttributeIndexer(

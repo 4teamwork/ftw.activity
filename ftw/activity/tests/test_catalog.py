@@ -6,10 +6,12 @@ from ftw.activity.catalog import object_changed
 from ftw.activity.catalog import object_deleted
 from ftw.activity.catalog import query_soup
 from ftw.activity.testing import FUNCTIONAL_TESTING
+from ftw.activity.tests.helpers import get_soup_activities
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.testing import freeze
 from ftw.testing import staticuid
+from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from repoze.catalog.query import Eq
@@ -30,6 +32,7 @@ class TestCatalog(TestCase):
         record = get_activity_soup().get(record_id)
 
         self.assertEquals({'path': '/plone/the-document',
+                           'allowed_roles_and_users': ['Anonymous'],
                            'uuid': 'testaddactivity00000000000000001',
                            'portal_type': 'Document',
                            'title': 'The Document',
@@ -46,6 +49,7 @@ class TestCatalog(TestCase):
         record = get_activity_soup().get(record_id)
 
         self.assertEquals({'path': '/plone/the-document',
+                           'allowed_roles_and_users': ['Anonymous'],
                            'uuid': 'testchangedactivity0000000000001',
                            'portal_type': 'Document',
                            'title': 'The Document',
@@ -62,6 +66,7 @@ class TestCatalog(TestCase):
         record = get_activity_soup().get(record_id)
 
         self.assertEquals({'path': '/plone/the-document',
+                           'allowed_roles_and_users': ['Anonymous'],
                            'uuid': 'testdeletedactivity0000000000001',
                            'portal_type': 'Document',
                            'title': 'The Document',
@@ -105,3 +110,18 @@ class TestCatalog(TestCase):
 
         self.assertItemsEqual(['/plone/folder', '/plone/folder/one'],
                               results)
+
+    def test_view_permission_is_required(self):
+        self.layer['portal'].manage_permission('View', ['Reader', 'Manager'])
+        folder = create(Builder('folder'))
+        create(Builder('page').titled('Not visible').within(folder))
+
+        user = create(Builder('user')
+                      .with_roles('Reader', 'Contributor', on=folder))
+        create(Builder('page').titled('Visible').within(folder))
+
+        login(self.layer['portal'], user.getId())
+
+        self.assertEquals(
+            [{'path': '/plone/folder/visible'}],
+            get_soup_activities(('path',)))

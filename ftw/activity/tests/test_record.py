@@ -114,3 +114,11 @@ class TestCatalog(TestCase):
     def test_translated_portal_type(self):
         record = ActivityRecord(create(Builder('document')), 'added')
         self.assertEquals('Document', record.translated_portal_type())
+
+    def test_allowed_roles_and_users(self):
+        self.portal.manage_permission('View', ['Reader', 'Manager'])
+        create(Builder('user').with_roles('Reader', on=self.portal))
+        record = ActivityRecord(create(Builder('document')), 'added')
+        self.assertEquals(
+            ['user:john.doe', 'Manager', 'Reader'],
+            record.attrs['allowed_roles_and_users'])

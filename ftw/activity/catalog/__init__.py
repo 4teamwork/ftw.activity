@@ -1,6 +1,11 @@
 from collective.lastmodifier.interfaces import ILastModifier
 from ftw.activity.catalog.record import ActivityRecord
+from ftw.activity.utils import get_roles_and_users
+from functools import partial
 from plone.uuid.interfaces import IUUID
+from repoze.catalog.query import And
+from repoze.catalog.query import Eq
+from repoze.catalog.query import Or
 from souper.soup import get_soup
 from zope.component import queryAdapter
 from zope.component.hooks import getSite
@@ -8,7 +13,13 @@ from zope.component.hooks import getSite
 
 def query_soup(queryobject, **kwargs):
     soup = get_activity_soup()
+    queryobject = And(make_allowed_roles_and_users_query(),
+                      queryobject)
     return soup.query(queryobject, **kwargs)
+
+
+def make_allowed_roles_and_users_query(index=u'allowed_roles_and_users'):
+    return reduce(Or, map(partial(Eq, index), get_roles_and_users()))
 
 
 def get_activity_soup():

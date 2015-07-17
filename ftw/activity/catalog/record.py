@@ -2,6 +2,7 @@ from AccessControl import getSecurityManager
 from collective.prettydate.interfaces import IPrettyDate
 from DateTime import DateTime
 from ftw.activity.events import ActivityCreatedEvent
+from ftw.activity.utils import roles_and_users_for_permission
 from plone.app.uuid.utils import uuidToObject
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
@@ -15,6 +16,8 @@ from zope.i18n import translate
 class ActivityRecord(Record):
 
     def __init__(self, context, action, actor_userid=None, date=None):
+        self.attrs['allowed_roles_and_users'] = (
+            roles_and_users_for_permission(context, 'View'))
         self.attrs['path'] = '/'.join(context.getPhysicalPath())
         self.attrs['uuid'] = IUUID(context)
         self.attrs['portal_type'] = context.portal_type
