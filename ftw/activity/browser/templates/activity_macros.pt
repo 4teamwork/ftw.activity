@@ -52,11 +52,11 @@
 
             by
 
-            <span i18n:name="actor" class="actor">
-                <a tal:attributes="href actor/url"
-                   tal:omit-tag="not:actor/url"
-                   tal:content="actor/fullname" />
-            </span>
+            <span
+                i18n:name="actor" class="actor"><a
+                tal:attributes="href actor/url"
+                tal:omit-tag="not:actor/url"
+                tal:content="actor/fullname" /></span>
         </metal:BYLINE>
     </div>
 
