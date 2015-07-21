@@ -9,6 +9,11 @@
       return;
     }
 
+    if(events.find('.event').length === 0) {
+      /* There are no events, don't add a "More" button. */
+      return;
+    }
+
     var fetch_url = events.data('fetch-url');
     var more = $('<a />').
         attr('href', '#').
