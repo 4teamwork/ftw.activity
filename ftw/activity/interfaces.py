@@ -97,3 +97,18 @@ class IActivityFilter(Interface):
         the lazy batching and result in processing all activities, even when
         they are not rendered because of the batching.
         """
+
+
+class IActivitySoupCatalogFactoryExtension(Interface):
+    """Adapter interface for extending the catalog factory.
+    The **named** adapter adapts the repoze catalog
+    (repoze.catalog.interfaces.ICatalog) and may add additional indexes.
+    """
+
+    def __init__(catalog):
+        """Adapts the catalog.
+        """
+
+    def __call__():
+        """Extend the catalog with indexes.
+        """
