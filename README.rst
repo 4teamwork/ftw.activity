@@ -22,6 +22,9 @@ The default event handlers work for Archetypes and Dexterity objects.
 - Object added
 - Object changed
 - Object deleted
+- Object copied
+- Object moved
+- Workflow transition
 
 
 Usage
