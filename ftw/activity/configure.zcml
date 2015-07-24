@@ -3,14 +3,16 @@
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:profilehook="http://namespaces.zope.org/profilehook"
     xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:meta="http://namespaces.zope.org/meta"
+    xmlns:profilehook="http://namespaces.zope.org/profilehook"
     i18n_domain="ftw.activity">
 
     <include package="ftw.profilehook" />
 
     <five:registerPackage package="." initialize=".initialize" />
     <i18n:registerTranslations directory="locales" />
+    <meta:provides feature="ftw-activity-2" />
 
     <include package=".browser" />
     <include package=".catalog" />
