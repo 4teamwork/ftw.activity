@@ -212,6 +212,14 @@ of the same object which happen in less than 1 Minute between each activity.
 This is removes noise from the activity feed when a user edits the same object a lot in short
 time, for example when using an external editor.
 
+
+Local activity view
+===================
+
+The ``@@local-activity`` view is available on any context and shows only activities
+of the current context but not its children.
+
+
 Links
 =====
 

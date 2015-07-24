@@ -27,4 +27,14 @@
 
     <adapter factory=".renderer.DefaultRenderer" name="default" />
 
+    <browser:page
+        for="*"
+        name="local-activity"
+        class=".local.LocalActivityView"
+        permission="zope2.View"
+        allowed_attributes="fetch raw"
+        />
+
+    <adapter factory=".local.LocalActivityFilter" name="local-activity-filter" />
+
 </configure>

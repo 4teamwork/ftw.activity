@@ -112,3 +112,8 @@ class IActivitySoupCatalogFactoryExtension(Interface):
     def __call__():
         """Extend the catalog with indexes.
         """
+
+
+class ILocalActivityView(Interface):
+    """Marker interface for the local-activity view.
+    """
