@@ -1,0 +1,19 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="ftw.activity">
+
+    <include package="plone.app.portlets" />
+
+    <plone:portlet
+        name="portlets.Activity"
+        interface=".activity_portlet.IActivityPortlet"
+        assignment=".activity_portlet.Assignment"
+        view_permission="zope2.View"
+        renderer=".activity_portlet.Renderer"
+        addview=".activity_portlet.AddForm"
+        editview=".activity_portlet.EditForm"
+        />
+
+</configure>

@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:omit-tag="">
+<dl class="portlet portletActivity" i18n:domain="ftw.activity">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span tal:condition="view/title" tal:content="view/title">
+              Title
+        </span>
+        <span class="portletTopRight"></span>
+    </dt>
+
+    <tal:items tal:repeat="repr view/events">
+        <dd class="portletItem">
+
+            <div tal:attributes="data-activity-id repr/activity_id;
+                             class repr/classes"
+             tal:content="structure repr/render" />
+        </dd>
+    </tal:items>
+
+    <dd class="portletFooter"
+        tal:define="full_activity_link view/full_activity_link"
+        tal:condition="full_activity_link">
+        <a href="#"
+           class="showMoreLink"
+           tal:attributes="href full_activity_link"
+           i18n:translate="box_full_activity_list">Full activity list&hellip;</a>
+        <span class="portletBottomLeft"></span>
+        <span class="portletBottomRight"></span>
+    </dd>
+</dl>
+</html>
