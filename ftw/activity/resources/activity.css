@@ -37,3 +37,14 @@
   background-color: #DEF;
   border-color: #ABC;
 }
+
+/* Portlet */
+.portletActivity .event {
+  margin-bottom: 1em;
+}
+
+.portletActivity .event .avatar {
+  float: left;
+  padding-right: 0.4em;
+}
+/* End Portlet */

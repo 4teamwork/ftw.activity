@@ -16,6 +16,7 @@
 
     <include package=".browser" />
     <include package=".catalog" />
+    <include package=".portlets" />
 
     <browser:resourceDirectory
         name="ftw.activity"

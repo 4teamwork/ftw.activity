@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-07-16 12:25+0000\n"
+"POT-Creation-Date: 2015-10-14 15:40+0000\n"
 "PO-Revision-Date: 2015-05-19 13:24+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,8 +14,33 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 "Preferred-Encodings: utf-8 latin1\n"
 
+#. Default: "Add Activity Portlet"
+#: ./ftw/activity/portlets/activity_portlet.py:54
+msgid "activity_portlet_add_form_label"
+msgstr "Aktivität-Portlet hinzufügen"
+
+#. Default: "Edit Activity Portlet"
+#: ./ftw/activity/portlets/activity_portlet.py:46
+msgid "activity_portlet_edit_form_label"
+msgstr "Aktivität-Portlet bearbeiten"
+
+#. Default: "This portlet displays activities."
+#: ./ftw/activity/portlets/activity_portlet.py:48
+msgid "activity_portlet_form_description"
+msgstr "Das Portlet zeigt verschiedenste Aktivitäten an."
+
+#. Default: "Activity stream"
+#: ./ftw/activity/portlets/activity_portlet.py:38
+msgid "activity_portlet_title"
+msgstr "Aktivitäten"
+
 msgid "added"
 msgstr "Hinzugefügt"
+
+#. Default: "Full activity list…"
+#: ./ftw/activity/portlets/templates/activity_portlet.pt:27
+msgid "box_full_activity_list"
+msgstr "Zeige alle Aktivitäten..."
 
 #. Default: "${action} ${when} by ${actor}"
 #: ./ftw/activity/browser/templates/activity_macros.pt:55
@@ -35,5 +60,22 @@ msgstr "Mehr"
 msgid "moved"
 msgstr "Verschoben"
 
+#. Default: "How many items to list."
+#: ./ftw/activity/portlets/activity_portlet.py:19
+msgid "number_of_items_description"
+msgstr "Wie viele Aktivitäten sollen angezeigt werden?"
+
+#. Default: "Number of items to display"
+#: ./ftw/activity/portlets/activity_portlet.py:17
+msgid "number_of_items_label"
+msgstr "Anzahl Aktivitäten"
+
+#. Default: "Show a link to more activities"
+#: ./ftw/activity/portlets/activity_portlet.py:25
+msgid "show_more_link"
+msgstr "Einen Link zu mehr Aktivitäten anzeigen"
+
 msgid "transition"
 msgstr "Statusänderung"
+
+

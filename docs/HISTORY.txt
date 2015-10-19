@@ -5,7 +5,8 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add an Activity Portlet
+  [elioschmutz]
 
 
 2.0.0 (2015-09-30)
