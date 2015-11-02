@@ -5,6 +5,9 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
+- Fix fetching within tabbedview tabs.
+  [jone]
+
 - Add an Activity Portlet
   [elioschmutz]
 
