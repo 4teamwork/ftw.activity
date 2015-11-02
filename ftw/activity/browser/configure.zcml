@@ -16,6 +16,7 @@
         name="tabbedview_view-activity"
         class=".tab.ActivityTab"
         permission="zope2.View"
+        allowed_attributes="fetch raw"
         />
 
     <browser:page
