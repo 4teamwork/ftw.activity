@@ -5,6 +5,9 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
+- Fix a bug which occurred when moving objects from and to the Plone Site.
+  [mbaechtold]
+
 - Fix fetching within tabbedview tabs.
   [jone]
 

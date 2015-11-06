@@ -127,6 +127,69 @@ class TestSubscribers(TestCase):
                                  'new_parent_path',
                                  'new_parent_uuid')))
 
+    @staticuid()
+    def test_moving_objects_from_plone_site(self):
+        """
+        This test makes sure that objects stored just below the Plone Site
+        can be moved away from the Plone Site.
+        """
+        type_to_modified = self.layer['portal'].portal_types.get('Plone Site')
+        type_to_modified.allowed_content_types = ('Document',)
+
+        source = create(Builder('document').titled('Source'))
+        target = create(Builder('folder').titled('Target'))
+
+        clipboard = source.manage_cutObjects(source.getId())
+        target.manage_pasteObjects(clipboard)
+
+        self.assertEquals(
+            [{'action': 'added', 'path': '/plone/source'},
+             {'action': 'added', 'path': '/plone/target'},
+             {'action': 'moved', 'path': '/plone/target/source',
+              'old_parent_path': '/plone',
+              'old_parent_uuid': None,
+              'new_parent_path': '/plone/target',
+              'new_parent_uuid': 'testmovingobjectsfromplone000002'}],
+
+            get_soup_activities(('path',
+                                 'action',
+                                 'old_parent_path',
+                                 'old_parent_uuid',
+                                 'new_parent_path',
+                                 'new_parent_uuid')))
+
+    @staticuid()
+    def test_moving_objects_to_plone_site(self):
+        """
+        This test makes sure that objects can be move to the Plone Site.
+        """
+        type_to_modified = self.layer['portal'].portal_types.get('Plone Site')
+        type_to_modified.allowed_content_types = ('Document',)
+
+        source = create(Builder('folder').titled('Source'))
+        doc = create(Builder('document').within(source))
+        target = create(Builder('folder').titled('Target'))
+
+        clipboard = source.manage_cutObjects(doc.getId())
+        target.manage_pasteObjects(clipboard)
+
+        self.assertEquals(
+            [{'action': 'added', 'path': '/plone/source'},
+             {'action': 'added', 'path': '/plone/source/document'},
+             {'action': 'added', 'path': '/plone/target'},
+             {'action': 'moved', 'path': '/plone/target/document',
+              'old_parent_path': '/plone/source',
+              'old_parent_uuid': 'testmovingobjectstoplonesi000001',
+              'new_parent_path': '/plone/target',
+              'new_parent_uuid': 'testmovingobjectstoplonesi000003'}],
+
+            get_soup_activities(('path',
+                                 'action',
+                                 'old_parent_path',
+                                 'old_parent_uuid',
+                                 'new_parent_path',
+                                 'new_parent_uuid')))
+
     def test_renaming_object_creates_no_record(self):
         # Renaming means changing the ID / URL of a content,
         # but not changing it's title.
