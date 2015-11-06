@@ -69,12 +69,12 @@ def object_moved(context, actor_userid=None, date=None,
     if old_parent:
         record.attrs['old_parent_path'] = '/'.join(
             old_parent.getPhysicalPath())
-        record.attrs['old_parent_uuid'] = IUUID(old_parent)
+        record.attrs['old_parent_uuid'] = IUUID(old_parent, None)
 
     if new_parent:
         record.attrs['new_parent_path'] = '/'.join(
             new_parent.getPhysicalPath())
-        record.attrs['new_parent_uuid'] = IUUID(new_parent)
+        record.attrs['new_parent_uuid'] = IUUID(new_parent, None)
 
     return soup.add(record)
 
