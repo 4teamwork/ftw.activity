@@ -1,3 +1,5 @@
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from ftw.activity.catalog import object_added
 from ftw.activity.catalog import object_changed
 from ftw.activity.catalog import object_deleted
@@ -11,6 +13,9 @@ def make_object_added_activity(context, event):
 
 
 def make_object_changed_activity(context, event):
+    if not aq_parent(aq_inner(context)):
+        return
+
     object_changed(context)
 
 

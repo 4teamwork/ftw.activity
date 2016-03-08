@@ -5,6 +5,8 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
+- Fix bug with collective.geo when indexing objects too early. [jone]
+
 - Fix a bug which occurred when moving objects from and to the Plone Site.
   [mbaechtold]
 
