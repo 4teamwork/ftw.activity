@@ -26,6 +26,7 @@ class ActivityRecord(Record):
         self.attrs['actor'] = (actor_userid
                                or getSecurityManager().getUser().getId())
         self.attrs['date'] = date or DateTime()
+        self.attrs['timestamp'] = DateTime(self.attrs['date']).millis()
 
         notify(ActivityCreatedEvent(context, self))
 
