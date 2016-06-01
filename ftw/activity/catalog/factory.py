@@ -22,7 +22,7 @@ class ActivitySoupCatalogFactory(object):
                 u'portal_type'))
         catalog[u'action'] = CatalogFieldIndex(NodeAttributeIndexer(u'action'))
         catalog[u'actor'] = CatalogFieldIndex(NodeAttributeIndexer(u'actor'))
-        catalog[u'date'] = CatalogFieldIndex(NodeAttributeIndexer(u'date'))
+        catalog[u'date'] = CatalogFieldIndex(NodeAttributeIndexer(u'timestamp'))
 
         for name, adapter in sorted(getAdapters(
                 (catalog,), IActivitySoupCatalogFactoryExtension)):
