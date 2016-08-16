@@ -2,6 +2,7 @@
 
   <div class="activity">
     <div class="events"
+         tal:attributes="data-total python:len(view._lookup())"
          i18n:attributes="data-more-label more_link_label">
 
       <tal:EVENTS tal:replace="structure view/fetch" />

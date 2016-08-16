@@ -12,8 +12,11 @@
     var more = $('<a />').
         attr('href', '#').
         addClass('more-button').
-        text(events.data('more-label')).
-        insertAfter(events);
+        text(events.data('more-label'));
+
+        if ($('.events').data('total') > events.find('.event').length) {
+          more.insertAfter(events)
+        }
 
     more.click(function(event) {
       event.preventDefault();
@@ -31,8 +34,9 @@
           $(data).appendTo(events);
           var new_events = events.find('.event').not(old_events);
           events.trigger('activity-fetched', [new_events]);
-        } else {
-          more.remove();
+          if ($('.events').data('total') == events.find('.event').length) {
+            more.remove()
+          }
         }
       });
     });
