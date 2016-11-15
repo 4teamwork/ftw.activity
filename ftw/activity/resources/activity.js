@@ -9,6 +9,10 @@
       return;
     }
 
+    if (events.find('.event').length === 0) {
+      return;
+    }
+
     var fetch_url = events.data('fetch-url');
     var more = $('<a />').
         attr('href', '#').
