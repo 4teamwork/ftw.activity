@@ -48,5 +48,8 @@
         'maxHeight': '100%'
       });
     }
+    if($('.activity .event:last').data('is-last-activity') == 'True') {
+      $('.activity .more-button').hide();
+    }
   });
 })(jQuery);

@@ -2,6 +2,7 @@
 
     <tal:EVENTS repeat="repr view/events">
         <div tal:attributes="data-activity-id repr/activity_id;
+                             data-is-last-activity repr/is_last_activity|nothing;
                              class repr/classes"
              tal:content="structure repr/render" />
     </tal:EVENTS>

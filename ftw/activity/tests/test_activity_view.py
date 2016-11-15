@@ -130,14 +130,20 @@ class TestActivityView(TestCase):
 
         view = self.layer['portal'].restrictedTraverse('@@activity')
 
-        get_title = lambda repr: repr['activity'].attrs['title']
+        activity_repr = lambda repr: {'title': repr['activity'].attrs['title'],
+                                      'is_last': repr['is_last_activity']}
+
         events = list(view.events(amount=3))
-        self.assertEquals(['Page 0', 'Page 1', 'Page 2'],
-                          map(get_title, events))
+        self.assertEquals([{'title': 'Page 0', 'is_last': False},
+                           {'title': 'Page 1', 'is_last': False},
+                           {'title': 'Page 2', 'is_last': False}],
+                          map(activity_repr, events))
 
         events = list(view.events(amount=3, last_activity=events[-1]['activity_id']))
-        self.assertEquals(['Page 3', 'Page 4', 'Page 5'],
-                          map(get_title, events))
+        self.assertEquals([{'title': 'Page 3', 'is_last': False},
+                           {'title': 'Page 4', 'is_last': False},
+                           {'title': 'Page 5', 'is_last': True}],
+                          map(activity_repr, events))
 
     @browsing
     def test_comments_do_not_break_activity_view(self, browser):

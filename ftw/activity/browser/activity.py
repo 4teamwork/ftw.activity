@@ -44,8 +44,8 @@ class ActivityView(BrowserView):
         if last_activity:
             activities = self._begin_after(int(last_activity), activities)
         activities = self._filter_activities(activities)
-        activities = self._batch_to(amount, activities)
-        return self._lookup_renderers_for_activities(activities)
+        activity_infos = self._batch_to(amount, activities)
+        return self._lookup_renderers_for_activities(activity_infos)
 
     def query(self):
         return Eq('path', '/'.join(self.context.getPhysicalPath()))
@@ -71,17 +71,39 @@ class ActivityView(BrowserView):
         return activities
 
     def _batch_to(self, amount, activities):
-        for index, repr in enumerate(activities):
+        # The is_last_activity is True for the very last activity
+        # in activities (not the last on the batch).
+        # In order to set this correctly, while preserving generator
+        # laziness and not yielding more activities than necessary
+        # the implementation has a "previous" cache so that we can
+        # look ahead first.
+        previous = None
+        enumerated_activities = enumerate(activities)
+        for index, repr in enumerated_activities:
             if index >= amount:
                 break
-            yield repr
+            if previous is not None:
+                yield previous
 
-    def _lookup_renderers_for_activities(self, activities):
-        for activity in activities:
+            previous = {'activity': repr,
+                        'is_last_activity': False}
+
+        if previous is not None:
+            try:
+                next(enumerated_activities)
+            except StopIteration:
+                # The previous activity yielded was actually the last one
+                previous['is_last_activity'] = True
+            finally:
+                yield previous
+
+    def _lookup_renderers_for_activities(self, activity_infos):
+        for activity_info in activity_infos:
+            activity = activity_info['activity']
             obj = activity.get_object()
-
             yield {'activity_id': activity.intid,
                    'activity': activity,
+                   'is_last_activity': activity_info['is_last_activity'],
                    'classes': ('event activity-action-{0}'
                                ' activity-contenttype-{1}'.format(
                         normalizeString(activity.attrs['action']),
