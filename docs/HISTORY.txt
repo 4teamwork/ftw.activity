@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.2.1 (unreleased)
+2.2.1 (2016-11-15)
 ------------------
 
 - Hide "More" button when there are no more events. [jone]
