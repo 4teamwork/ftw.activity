@@ -5,7 +5,7 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix error in detection of last event (More button). [jone]
 
 
 2.2.1 (2016-11-15)

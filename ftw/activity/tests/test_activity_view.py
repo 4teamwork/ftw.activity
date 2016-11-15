@@ -123,7 +123,7 @@ class TestActivityView(TestCase):
     def test_events_are_batched(self):
         pages = []
         with freeze(datetime(2010, 1, 2)) as clock:
-            for index in range(6):
+            for index in range(7):
                 clock.backward(hours=1)
                 pages.append(create(Builder('page')
                                     .titled('Page {0}'.format(index))))
@@ -142,7 +142,11 @@ class TestActivityView(TestCase):
         events = list(view.events(amount=3, last_activity=events[-1]['activity_id']))
         self.assertEquals([{'title': 'Page 3', 'is_last': False},
                            {'title': 'Page 4', 'is_last': False},
-                           {'title': 'Page 5', 'is_last': True}],
+                           {'title': 'Page 5', 'is_last': False}],
+                          map(activity_repr, events))
+
+        events = list(view.events(amount=3, last_activity=events[-1]['activity_id']))
+        self.assertEquals([{'title': 'Page 6', 'is_last': True}],
                           map(activity_repr, events))
 
     @browsing

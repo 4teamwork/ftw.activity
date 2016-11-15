@@ -80,13 +80,14 @@ class ActivityView(BrowserView):
         previous = None
         enumerated_activities = enumerate(activities)
         for index, repr in enumerated_activities:
-            if index >= amount:
-                break
             if previous is not None:
                 yield previous
 
             previous = {'activity': repr,
                         'is_last_activity': False}
+
+            if index >= amount - 1:
+                break
 
         if previous is not None:
             try:
