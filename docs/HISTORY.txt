@@ -5,6 +5,8 @@ Changelog
 2.2.1 (unreleased)
 ------------------
 
+- Hide "More" button when there are no more events. [jone]
+
 - Hide "More" button when there are no events. [jone]
 
 
