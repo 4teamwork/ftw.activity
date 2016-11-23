@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.2.3 (unreleased)
+2.3.0 (2016-11-23)
 ------------------
 
 - Store activites for added / removed p.a.discussion comments. [jone]
