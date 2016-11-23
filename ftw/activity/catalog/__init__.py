@@ -100,3 +100,27 @@ def index_object(obj):
     else:
         modifier = obj.Creator()
     object_changed(obj, actor_userid=modifier, date=obj.modified())
+
+
+def comment_added(context, comment, actor_userid=None, date=None):
+    soup = get_activity_soup()
+    record = ActivityRecord(context, 'comment:added',
+                            actor_userid=actor_userid, date=date)
+    record.attrs['comment_id'] = comment.comment_id
+    record.attrs['comment_text'] = comment.text
+    record.attrs['comment_text_mime_type'] = comment.mime_type
+    if comment.in_reply_to:
+        record.attrs['comment_in_reply_to'] = comment.in_reply_to
+    return soup.add(record)
+
+
+def comment_removed(context, comment, actor_userid=None, date=None):
+    soup = get_activity_soup()
+    record = ActivityRecord(context, 'comment:removed',
+                            actor_userid=actor_userid, date=date)
+    record.attrs['comment_id'] = comment.comment_id
+    record.attrs['comment_text'] = comment.text
+    record.attrs['comment_text_mime_type'] = comment.mime_type
+    if comment.in_reply_to:
+        record.attrs['comment_in_reply_to'] = comment.in_reply_to
+    return soup.add(record)

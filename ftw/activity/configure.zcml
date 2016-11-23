@@ -113,4 +113,28 @@
         handler=".subscribers.make_object_moved_activity"
         />
 
+    <!-- plone.app.discussion -->
+    <subscriber
+        for="*
+             plone.app.discussion.interfaces.ICommentAddedEvent"
+        handler=".subscribers.make_comment_added_activity"
+        />
+    <subscriber
+        for="*
+             plone.app.discussion.interfaces.IReplyAddedEvent"
+        handler=".subscribers.make_comment_added_activity"
+        />
+
+    <subscriber
+        for="*
+             plone.app.discussion.interfaces.ICommentRemovedEvent"
+        handler=".subscribers.make_comment_removed_activity"
+        />
+
+    <subscriber
+        for="*
+             plone.app.discussion.interfaces.IReplyRemovedEvent"
+        handler=".subscribers.make_comment_removed_activity"
+        />
+
 </configure>

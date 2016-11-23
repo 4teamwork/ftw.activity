@@ -1,5 +1,7 @@
 from datetime import datetime
 from DateTime import DateTime
+from ftw.activity.catalog import comment_added
+from ftw.activity.catalog import comment_removed
 from ftw.activity.catalog import get_activity_soup
 from ftw.activity.catalog import object_added
 from ftw.activity.catalog import object_changed
@@ -11,11 +13,13 @@ from ftw.builder import Builder
 from ftw.builder import create
 from ftw.testing import freeze
 from ftw.testing import staticuid
+from plone.app.discussion.interfaces import IConversation
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from repoze.catalog.query import Eq
 from unittest2 import TestCase
+from zope.component import createObject
 
 
 class TestCatalog(TestCase):
@@ -128,3 +132,57 @@ class TestCatalog(TestCase):
         self.assertEquals(
             [{'path': '/plone/folder/visible'}],
             get_soup_activities(('path',)))
+
+    @staticuid()
+    def test_comment_added_activity(self):
+        document = create(Builder('document').titled('The Document'))
+        conversation = IConversation(document)
+
+        comment = createObject('plone.Comment')
+        comment.text = 'Comment text'
+        comment_id = conversation.addComment(comment)
+
+        with freeze(datetime(2010, 12, 25, 13, 30)):
+            record_id = comment_added(document, comment)
+        record = get_activity_soup().get(record_id)
+
+        self.assertEquals({'path': '/plone/the-document',
+                           'allowed_roles_and_users': ['Anonymous'],
+                           'uuid': 'testcommentaddedactivity00000001',
+                           'portal_type': 'Document',
+                           'title': 'The Document',
+                           'timestamp': 1293280200000L,
+                           'action': 'comment:added',
+                           'date': DateTime('2010/12/25 13:30:00'),
+                           'actor': TEST_USER_ID,
+                           'comment_id': comment_id,
+                           'comment_text': 'Comment text',
+                           'comment_text_mime_type': 'text/plain'},
+                          dict(record.attrs))
+
+    @staticuid()
+    def test_comment_removed_activity(self):
+        document = create(Builder('document').titled('The Document'))
+        conversation = IConversation(document)
+
+        comment = createObject('plone.Comment')
+        comment.text = 'Comment text'
+        comment_id = conversation.addComment(comment)
+
+        with freeze(datetime(2010, 12, 25, 13, 30)):
+            record_id = comment_removed(document, comment)
+        record = get_activity_soup().get(record_id)
+
+        self.assertEquals({'path': '/plone/the-document',
+                           'allowed_roles_and_users': ['Anonymous'],
+                           'uuid': 'testcommentremovedactivity000001',
+                           'portal_type': 'Document',
+                           'title': 'The Document',
+                           'timestamp': 1293280200000L,
+                           'action': 'comment:removed',
+                           'date': DateTime('2010/12/25 13:30:00'),
+                           'actor': TEST_USER_ID,
+                           'comment_id': comment_id,
+                           'comment_text': 'Comment text',
+                           'comment_text_mime_type': 'text/plain'},
+                          dict(record.attrs))

@@ -1,5 +1,7 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from ftw.activity.catalog import comment_added
+from ftw.activity.catalog import comment_removed
 from ftw.activity.catalog import object_added
 from ftw.activity.catalog import object_changed
 from ftw.activity.catalog import object_deleted
@@ -49,3 +51,11 @@ def make_object_moved_activity(context, event):
     object_moved(context,
                  old_parent=event.oldParent,
                  new_parent=event.newParent)
+
+
+def make_comment_added_activity(context, event):
+    comment_added(context, event.comment)
+
+
+def make_comment_removed_activity(context, event):
+    comment_removed(context, event.comment)

@@ -3,7 +3,7 @@ from Acquisition import aq_parent
 from datetime import datetime
 from ftw.activity.catalog import get_activity_soup
 from ftw.activity.catalog import object_changed
-from ftw.activity.testing import FUNCTIONAL_TESTING
+from ftw.activity.tests import FunctionalTestCase
 from ftw.activity.tests.pages import activity
 from ftw.builder import Builder
 from ftw.builder import create
@@ -14,25 +14,16 @@ from operator import attrgetter
 from plone import api
 from plone.app.testing import login
 from plone.app.testing import logout
-from plone.app.testing import setRoles
-from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
-from plone.registry.interfaces import IRegistry
-from Products.CMFCore.utils import getToolByName
-from unittest2 import TestCase
-from zope.component import getUtility
 import transaction
 
 
 
-class TestActivityView(TestCase):
-    layer = FUNCTIONAL_TESTING
-
-    def setUp(self):
-        setRoles(self.layer['portal'], TEST_USER_ID, ['Manager'])
+class TestActivityView(FunctionalTestCase):
 
     @browsing
     def test_shows_added_and_modified_objects(self, browser):
+        self.grant('Manager')
         with freeze(datetime(2010, 12, 26, 10, 35)) as clock:
             folder = create(Builder('folder').titled('The Folder'))
 
@@ -64,6 +55,7 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_editable_border_is_hidden(self, browser):
+        self.grant('Manager')
         browser.login().visit(view='activity')
         self.assertEquals('activity', plone.view())
         self.assertFalse(browser.css('.documentEditable'),
@@ -71,6 +63,7 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_raw_action_is_public(self, browser):
+        self.grant('Manager')
         create(Builder('folder'))
         browser.login().open(view='activity')
         self.assertEquals(1, len(activity.events()),
@@ -78,6 +71,7 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_fetch_more_events(self, browser):
+        self.grant('Manager')
         foo = create(Builder('page').titled('Foo'))
         bar = create(Builder('page').titled('Bar'))
         get_activity_soup().clear()
@@ -121,6 +115,7 @@ class TestActivityView(TestCase):
                           map(attrgetter('title'), events))
 
     def test_events_are_batched(self):
+        self.grant('Manager')
         pages = []
         with freeze(datetime(2010, 1, 2)) as clock:
             for index in range(7):
@@ -150,29 +145,12 @@ class TestActivityView(TestCase):
                           map(activity_repr, events))
 
     @browsing
-    def test_comments_do_not_break_activity_view(self, browser):
-        registry = getUtility(IRegistry)
-        registry['plone.app.discussion.interfaces'
-                 '.IDiscussionSettings.globally_enabled'] = True
-
-        types = getToolByName(self.layer['portal'], 'portal_types')
-        types['Document'].allow_discussion = True
-        transaction.commit()
-
-        page = create(Builder('document'))
-        browser.login().visit(page)
-        browser.fill({'Comment': 'Hello World'}).submit()
-        browser.visit(view='activity')
-        self.assertEquals(
-            1, len(activity.events()),
-            'Expected only page creation event to be visible.')
-
-    @browsing
     def test_actor_not_available(self, browser):
         """
         This test makes sure that there won't be an error if the user who
         created an object is no longer available.
         """
+        self.grant('Manager')
         # Become admin and create an unprivileged user.
         login(self.layer['portal'], TEST_USER_NAME)
         user = create(Builder('user').with_roles('Contributor'))
@@ -195,6 +173,7 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_delete_events_are_shown(self, browser):
+        self.grant('Manager')
         with freeze(datetime(2010, 1, 2)) as clock:
             page = create(Builder('page').titled('The Page'))
 
@@ -218,3 +197,36 @@ class TestActivityView(TestCase):
                   'url': None,
                   'byline': 'Added an hour ago by test_user_1_'}],
                 activity.events_infos())
+
+    @browsing
+    def test_comment_is_shown(self, browser):
+        """
+        This test makes sure that the comment text of a comment activity
+        is shown in the feed (cropped).
+        """
+        self.grant('Manager')
+        self.enable_discussion_for_document()
+        browser.login().visit(create(Builder('document').titled(u'The Page')))
+        browser.fill({'Comment': '''Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit. Atque haec ita iustitiae propria sunt, ut sint
+        virtutum reliquarum communia. Quod autem in homine praestantissimum
+        atque optimum est, id deseruit. An vero displicuit ea, quae tributa
+        est animi virtutibus tanta praestantia? Et quidem illud ipsum non
+        nimium probo et tantum patior, philosophum loqui de cupiditatibus
+        finiendis. Nulla profecto est, quin suam vim retineat a primo ad
+        extremum.'''}).submit()
+
+        browser.open(view='activity')
+        self.assertEquals(
+            [{'title': 'The Page',
+              'url': 'http://nohost/plone/the-page',
+              'byline': 'Comment added now by test_user_1_'},
+             {'title': 'The Page',
+              'url': 'http://nohost/plone/the-page',
+              'byline': 'Added now by test_user_1_'}],
+            activity.events_infos())
+
+        self.assertEquals(
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            ' Atque haec ita iustitiae propria ...',
+            activity.events()[0].body_text)

@@ -27,6 +27,7 @@
         />
 
     <adapter factory=".renderer.DefaultRenderer" name="default" />
+    <adapter factory=".renderer.DefaultCommentRenderer" name="default:comment" />
 
     <browser:page
         for="*"
