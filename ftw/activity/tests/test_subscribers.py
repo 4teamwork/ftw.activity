@@ -4,14 +4,20 @@ from ftw.activity.testing import FUNCTIONAL_TESTING
 from ftw.activity.tests.helpers import get_soup_activities
 from ftw.builder import Builder
 from ftw.builder import create
+from ftw.testbrowser import browsing
 from ftw.testing import staticuid
+from plone.app.discussion.interfaces import IConversation
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
+from plone.registry.interfaces import IRegistry
 from Products.Archetypes.event import ObjectEditedEvent
 from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
+from zope.component import createObject
+from zope.component import getUtility
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
+import transaction
 
 
 class TestSubscribers(TestCase):
@@ -208,3 +214,96 @@ class TestSubscribers(TestCase):
               'action': 'added'}],
 
             get_soup_activities(('path', 'action')))
+
+    @browsing
+    def test_adding_a_comment(self, browser):
+        """
+        This test makes sure that an activity is added when a comment is created.
+        """
+        self.enable_discussion_for_document()
+        browser.login().visit(create(Builder('document')))
+        browser.fill({'Comment': 'Hello World'}).submit()
+        transaction.begin()
+
+        self.assertEquals(
+            [{'path': '/plone/document',
+              'action': 'added'},
+             {'path': '/plone/document',
+              'action': 'comment:added',
+              'comment_text': 'Hello World'}],
+            get_soup_activities(('path', 'action', 'comment_text')))
+
+    @browsing
+    def test_removing_a_comment(self, browser):
+        """
+        This test makes sure that an activity is added when a comment is removed.
+        """
+        self.enable_discussion_for_document()
+        browser.login().visit(create(Builder('document')))
+        browser.fill({'Comment': 'Hello World'}).submit()
+        browser.css('.commentBody form[name=delete]').first.submit()
+
+        transaction.begin()
+        self.assertEquals(
+            [{'path': '/plone/document',
+              'action': 'added'},
+             {'path': '/plone/document',
+              'action': 'comment:added',
+              'comment_text': 'Hello World'},
+             {'path': '/plone/document',
+              'action': 'comment:removed',
+              'comment_text': 'Hello World'}],
+            get_soup_activities(('path', 'action', 'comment_text')))
+
+    @browsing
+    def test_adding_and_removing_a_comment_reply(self, browser):
+        """
+        This test makes sure that an activity is added when a comment reply
+        is created / removed.
+        This requires JavaScript, therfore we cannot test it with our testbrowser.
+        """
+        self.enable_discussion_for_document()
+        conversation = IConversation(create(Builder('document')))
+
+        comment = createObject('plone.Comment')
+        comment.text = 'Comment'
+        comment_id = conversation.addComment(comment)
+
+        reply = createObject('plone.Comment')
+        reply.text = 'Reply'
+        reply.in_reply_to = comment_id
+        reply_id = conversation.addComment(reply)
+
+        del conversation[reply_id]
+
+        self.maxDiff = None
+        self.assertEquals(
+            [{'path': '/plone/document',
+              'action': 'added'},
+             {'path': '/plone/document',
+              'action': 'comment:added',
+              'comment_text': 'Comment',
+              'comment_id': comment_id},
+             {'path': '/plone/document',
+              'action': 'comment:added',
+              'comment_text': 'Reply',
+              'comment_id': reply_id,
+              'comment_in_reply_to': comment_id},
+             {'path': '/plone/document',
+              'action': 'comment:removed',
+              'comment_text': 'Reply',
+              'comment_id': reply_id,
+              'comment_in_reply_to': comment_id}],
+            get_soup_activities(('path',
+                                 'action',
+                                 'comment_text',
+                                 'comment_id',
+                                 'comment_in_reply_to')))
+
+    def enable_discussion_for_document(self):
+        registry = getUtility(IRegistry)
+        registry['plone.app.discussion.interfaces'
+                 '.IDiscussionSettings.globally_enabled'] = True
+
+        types = getToolByName(self.layer['portal'], 'portal_types')
+        types['Document'].allow_discussion = True

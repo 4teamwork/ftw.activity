@@ -17,10 +17,7 @@ from plone.app.testing import logout
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
-from plone.registry.interfaces import IRegistry
-from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
-from zope.component import getUtility
 import transaction
 
 
@@ -148,24 +145,6 @@ class TestActivityView(TestCase):
         events = list(view.events(amount=3, last_activity=events[-1]['activity_id']))
         self.assertEquals([{'title': 'Page 6', 'is_last': True}],
                           map(activity_repr, events))
-
-    @browsing
-    def test_comments_do_not_break_activity_view(self, browser):
-        registry = getUtility(IRegistry)
-        registry['plone.app.discussion.interfaces'
-                 '.IDiscussionSettings.globally_enabled'] = True
-
-        types = getToolByName(self.layer['portal'], 'portal_types')
-        types['Document'].allow_discussion = True
-        transaction.commit()
-
-        page = create(Builder('document'))
-        browser.login().visit(page)
-        browser.fill({'Comment': 'Hello World'}).submit()
-        browser.visit(view='activity')
-        self.assertEquals(
-            1, len(activity.events()),
-            'Expected only page creation event to be visible.')
 
     @browsing
     def test_actor_not_available(self, browser):

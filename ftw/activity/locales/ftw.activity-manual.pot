@@ -28,3 +28,9 @@ msgstr ""
 
 msgid "transition"
 msgstr ""
+
+msgid "comment:added"
+msgstr ""
+
+msgid "comment:removed"
+msgstr ""

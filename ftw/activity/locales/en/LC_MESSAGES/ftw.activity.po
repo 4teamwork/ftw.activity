@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-14 15:40+0000\n"
+"POT-Creation-Date: 2016-11-23 15:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,6 +13,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "Preferred-Encodings: utf-8 latin1\n"
+
+#: ./ftw/activity/upgrades/configure.zcml:16
+msgid "Register activity view for collections."
+msgstr ""
 
 #. Default: "Add Activity Portlet"
 #: ./ftw/activity/portlets/activity_portlet.py:54
@@ -50,8 +54,18 @@ msgstr "${action} ${when} by ${actor}"
 msgid "changed"
 msgstr "Changed"
 
+msgid "comment:added"
+msgstr "Comment added"
+
+msgid "comment:removed"
+msgstr "Comment removed"
+
 msgid "deleted"
 msgstr "Deleted"
+
+#: ./ftw/activity/configure.zcml:30
+msgid "ftw.activity"
+msgstr "ftw.activity"
 
 #: ./ftw/activity/browser/templates/activity_raw.pt:4
 msgid "more_link_label"
@@ -77,5 +91,3 @@ msgstr ""
 
 msgid "transition"
 msgstr "Transition changed"
-
-
