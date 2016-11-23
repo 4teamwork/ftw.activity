@@ -26,6 +26,10 @@ class Event(object):
     def byline(self):
         return self.node.css('.byline').first.text
 
+    @property
+    def body_text(self):
+        return self.node.css('.body').first.text
+
     def infos(self):
         return {'title': self.title,
                 'url': self.url,
