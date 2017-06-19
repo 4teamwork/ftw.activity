@@ -49,6 +49,7 @@ setup(name='ftw.activity',
         'plone.api',
         'setuptools',
         'souper',
+        'node.ext.zodb <= 1.0.1',  # Avoid pulling in ZODB 5
         ],
 
       tests_require=tests_require,
