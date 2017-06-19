@@ -5,7 +5,7 @@ Changelog
 2.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add version constraint for node.ext.zodb <= 1.0.1 to avoid pulling in ZODB 5. [lgraf]
 
 
 2.3.0 (2016-11-23)
