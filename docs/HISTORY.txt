@@ -5,7 +5,7 @@ Changelog
 2.3.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ignore events fired by moving a plone site [raphael-s]
 
 
 2.3.2 (2017-07-03)

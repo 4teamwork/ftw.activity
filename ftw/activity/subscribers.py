@@ -1,5 +1,6 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from ftw.activity.catalog import comment_added
 from ftw.activity.catalog import comment_removed
 from ftw.activity.catalog import object_added
@@ -18,7 +19,7 @@ def is_supported(context):
 
 
 def make_object_added_activity(context, event):
-    if not is_supported(context):
+    if not is_supported(context) or IPloneSiteRoot.providedBy(event.object):
         return None
 
     object_added(context)
