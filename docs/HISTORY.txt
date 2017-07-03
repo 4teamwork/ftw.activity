@@ -5,6 +5,8 @@ Changelog
 2.3.2 (unreleased)
 ------------------
 
+- Resize image in readme to fix a bug with its size on pypi [raphael-s]
+
 - Ignore events of objects without UIDs to avoid errors. [raphael-s]
 
 
