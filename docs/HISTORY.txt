@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.3.2 (unreleased)
+2.3.2 (2017-07-03)
 ------------------
 
 - Resize image in readme to fix a bug with its size on pypi [raphael-s]
