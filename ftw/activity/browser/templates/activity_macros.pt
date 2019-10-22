@@ -22,7 +22,8 @@
             <span tal:attributes="class icon_class"
                   tal:omit-tag="nocall:obj">
                 <a tal:define="site_properties here/portal_properties/site_properties;
-                               view_actions site_properties/typesUseViewActionInListings|python:();
+                               view_actions_plone4 site_properties/typesUseViewActionInListings|python:();
+                               view_actions python:context.portal_registry.get('plone.types_use_view_action_in_listings', view_actions_plone4);
                                use_view python:activity.attrs['portal_type'] in view_actions;
                                url obj/absolute_url|string:;
                                url python:use_view and url + '/view' or url;"
