@@ -1,12 +1,19 @@
 from ftw.activity import _
+from ftw.activity.utils import IS_PLONE_5
 from plone import api
 from plone.app.portlets.portlets import base
 from plone.portlets.interfaces import IPortletDataProvider
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from z3c.form import field
 from zope import schema
 from zope.component import getMultiAdapter
-from zope.formlib import form
 from zope.interface import implements
+
+
+if IS_PLONE_5:
+    from plone.app.portlets.browser import formhelper as z3cformhelper
+else:
+    from plone.app.portlets.browser import z3cformhelper
 
 
 class IActivityPortlet(IPortletDataProvider):
@@ -41,16 +48,18 @@ class Assignment(base.Assignment):
         )
 
 
-class EditForm(base.EditForm):
-    form_fields = form.Fields(IActivityPortlet)
+class EditForm(z3cformhelper.EditForm):
+    fields = field.Fields(IActivityPortlet)
+
     label = _(u'activity_portlet_edit_form_label',
               default=u'Edit Activity Portlet')
     description = _(u'activity_portlet_form_description',
                     default=u'This portlet displays activities.')
 
 
-class AddForm(base.AddForm):
-    form_fields = form.Fields(IActivityPortlet)
+class AddForm(z3cformhelper.AddForm):
+    fields = field.Fields(IActivityPortlet)
+
     label = _(u'activity_portlet_add_form_label',
               default=u'Add Activity Portlet')
     description = _(u'activity_portlet_form_description',
