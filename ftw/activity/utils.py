@@ -2,6 +2,10 @@ from AccessControl.PermissionRole import rolesForPermissionOn
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 import AccessControl
+import pkg_resources
+
+
+IS_PLONE_5 = pkg_resources.get_distribution('Products.CMFPlone').version >= '5'
 
 
 def roles_and_users_for_permission(obj, permission):

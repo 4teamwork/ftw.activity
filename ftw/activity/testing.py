@@ -1,3 +1,4 @@
+from ftw.activity.utils import IS_PLONE_5
 from ftw.builder.testing import BUILDER_LAYER
 from ftw.builder.testing import functional_session_factory
 from ftw.builder.testing import set_builder_session_factory
@@ -23,6 +24,9 @@ class ActivityLayer(PloneSandboxLayer):
             context=configurationContext)
 
     def setUpPloneSite(self, portal):
+        if IS_PLONE_5:
+            applyProfile(portal, 'plone.app.contenttypes:default')
+
         applyProfile(portal, 'ftw.activity:default')
         applyProfile(portal, 'ftw.activity.tests:dexterity')
 
