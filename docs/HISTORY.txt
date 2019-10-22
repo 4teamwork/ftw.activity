@@ -5,6 +5,8 @@ Changelog
 2.3.3 (unreleased)
 ------------------
 
+- Plone 5.1 support [mathias.leimgruber]
+
 - Ignore events fired by moving a plone site [raphael-s]
 
 
