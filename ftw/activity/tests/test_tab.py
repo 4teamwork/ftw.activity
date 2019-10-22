@@ -9,6 +9,7 @@ from operator import attrgetter
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from unittest2 import TestCase
+import transaction
 
 
 class TestActivityView(TestCase):
@@ -26,12 +27,13 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_render_events(self, browser):
+        transaction.commit()
         with freeze(datetime(2010, 1, 2)) as clock:
-            create(Builder('page').titled('One'))
+            create(Builder('page').titled(u'One'))
             clock.backward(days=1)
-            create(Builder('page').titled('Two'))
+            create(Builder('page').titled(u'Two'))
             clock.backward(days=1)
-            create(Builder('page').titled('Three'))
+            create(Builder('page').titled(u'Three'))
 
         browser.login().open(view='tabbedview_view-activity')
         self.assertEquals(['One', 'Two', 'Three'],
