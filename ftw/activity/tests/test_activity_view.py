@@ -5,6 +5,7 @@ from ftw.activity.catalog import get_activity_soup
 from ftw.activity.catalog import object_changed
 from ftw.activity.tests import FunctionalTestCase
 from ftw.activity.tests.pages import activity
+from ftw.activity.utils import IS_PLONE_5
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.testbrowser import browsing
@@ -15,23 +16,31 @@ from plone import api
 from plone.app.testing import login
 from plone.app.testing import logout
 from plone.app.testing import TEST_USER_NAME
+from plone.registry.interfaces import IRegistry
+from zope.component import getUtility
 import transaction
 
 
-
 class TestActivityView(FunctionalTestCase):
+
+    def setUp(self):
+        super(TestActivityView, self).setUp()
+
+        if IS_PLONE_5:
+            registry = getUtility(IRegistry)
+            registry['plone.types_use_view_action_in_listings'] = [u'File', ]
 
     @browsing
     def test_shows_added_and_modified_objects(self, browser):
         self.grant('Manager')
         with freeze(datetime(2010, 12, 26, 10, 35)) as clock:
-            folder = create(Builder('folder').titled('The Folder'))
+            folder = create(Builder('folder').titled(u'The Folder'))
 
             clock.forward(days=1)
             folder.reindexObject()  # updates modified date
 
             clock.forward(days=1)
-            file_ = create(Builder('file').titled('The First File'))
+            file_ = create(Builder('file').titled(u'The First File'))
 
             clock.forward(hours=1)
             browser.login().open(view='activity')
@@ -72,8 +81,8 @@ class TestActivityView(FunctionalTestCase):
     @browsing
     def test_fetch_more_events(self, browser):
         self.grant('Manager')
-        foo = create(Builder('page').titled('Foo'))
-        bar = create(Builder('page').titled('Bar'))
+        foo = create(Builder('page').titled(u'Foo'))
+        bar = create(Builder('page').titled(u'Bar'))
         get_activity_soup().clear()
 
         with freeze(datetime(2010, 1, 2, 1)) as clock:
@@ -121,7 +130,7 @@ class TestActivityView(FunctionalTestCase):
             for index in range(7):
                 clock.backward(hours=1)
                 pages.append(create(Builder('page')
-                                    .titled('Page {0}'.format(index))))
+                                    .titled(u'Page {0}'.format(index))))
 
         view = self.layer['portal'].restrictedTraverse('@@activity')
 
@@ -175,7 +184,7 @@ class TestActivityView(FunctionalTestCase):
     def test_delete_events_are_shown(self, browser):
         self.grant('Manager')
         with freeze(datetime(2010, 1, 2)) as clock:
-            page = create(Builder('page').titled('The Page'))
+            page = create(Builder('page').titled(u'The Page'))
 
             browser.login().open(view='activity')
             self.assertEquals(

@@ -39,7 +39,7 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_fetch_is_traversable(self, browser):
-        create(Builder('page').titled('One'))
+        create(Builder('page').titled(u'One'))
         browser.login().open(view='tabbedview_view-activity/fetch')
         self.assertEquals(['One'],
                           map(attrgetter('title'), activity.events()))

@@ -18,8 +18,8 @@ class TestActivityView(TestCase):
 
     @browsing
     def test_local_activity_view_is_not_recursive(self, browser):
-        folder = create(Builder('folder').titled('The Folder'))
-        create(Builder('file').titled('The First File'))
+        folder = create(Builder('folder').titled(u'The Folder'))
+        create(Builder('file').titled(u'The First File'))
 
         browser.login().open(folder, view='local-activity')
         self.assertEquals(
