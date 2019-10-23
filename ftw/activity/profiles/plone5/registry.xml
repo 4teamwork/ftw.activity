@@ -1,0 +1,19 @@
+<registry>
+    <records prefix="plone.resources/ftwactivity_resource"
+             interface="Products.CMFPlone.interfaces.IResourceRegistry">
+        <value key="js">++resource++ftw.activity/activity.js</value>
+        <value key="deps">jquery</value>
+    </records>
+
+    <records prefix="plone.bundles/ftw-activity-resources"
+             interface="Products.CMFPlone.interfaces.IBundleRegistry">
+        <value key="resources">
+            <element>ftwactivity_resource</element>
+        </value>
+        <value key="enabled">True</value>
+        <value key="depends">plone-legacy</value>
+        <value key="compile">False</value>
+        <value key="jscompilation">++plone++ftw.activity/ftw-activity-compiled.js</value>
+        <value key="merge_with">default</value>
+    </records>
+</registry>
