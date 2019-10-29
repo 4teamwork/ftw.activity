@@ -41,7 +41,7 @@ class TestCatalog(TestCase):
                           str(record))
 
     def test_get_object_of_record__archetypes(self):
-        doc = create(Builder('document').titled('Foo'))
+        doc = create(Builder('document').titled(u'Foo'))
         record = ActivityRecord(doc, 'added')
 
         self.assertEquals(doc, record.get_object())
@@ -50,7 +50,7 @@ class TestCatalog(TestCase):
         self.assertEquals(None, record.get_object(),
                           'get_object should return None if the object is deleted.')
 
-        create(Builder('document').titled('Foo'))
+        create(Builder('document').titled(u'Foo'))
         self.assertEquals(None, record.get_object(),
                           'get_object should return None when the object at the path'
                           ' is not the same object.')
@@ -100,7 +100,7 @@ class TestCatalog(TestCase):
             record.get_actor_info())
 
     def test_get_pretty_date(self):
-        doc = create(Builder('document').titled('Foo'))
+        doc = create(Builder('document').titled(u'Foo'))
         record = ActivityRecord(doc, 'added')
 
         with freeze(datetime(2010, 1, 2)) as clock:

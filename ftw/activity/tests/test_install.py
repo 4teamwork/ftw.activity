@@ -29,6 +29,10 @@ class TestInstalling(TestCase):
         self.assertNotEqual(version, 'unknown')
 
     def test_existing_objects_are_indexed_when_installing(self):
+        # Prevent ReadConflictError - don't really know why this helps.
+        import transaction
+        transaction.commit()
+
         with freeze(datetime(2010, 1, 1)):
             folder = create(Builder('folder'))
         with freeze(datetime(2010, 1, 2)):

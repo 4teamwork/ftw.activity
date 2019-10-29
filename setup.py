@@ -11,9 +11,13 @@ tests_require = [
     'ftw.testbrowser',
     'ftw.testing',
     'plone.app.dexterity',
-    'plone.app.referenceablebehavior',
     'plone.app.testing',
     ]
+
+
+plone4_test_require = [
+    'plone.app.referenceablebehavior',
+]
 
 
 setup(name='ftw.activity',
@@ -26,6 +30,7 @@ setup(name='ftw.activity',
       classifiers=[
         'Framework :: Plone',
         'Framework :: Plone :: 4.3',
+        'Framework :: Plone :: 5.1',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
@@ -53,7 +58,8 @@ setup(name='ftw.activity',
         ],
 
       tests_require=tests_require,
-      extras_require={'tests': tests_require},
+      extras_require={'tests': tests_require,
+                      'plone4_test': plone4_test_require},
 
       entry_points="""
       # -*- Entry points: -*-

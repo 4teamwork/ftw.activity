@@ -18,6 +18,7 @@ def index_soup(site):
     if len(soup.data) > 0:
         return
 
+    soup.catalog  # Init catalog in soup storage
     catalog = getToolByName(site, 'portal_catalog')
     for brain in catalog.unrestrictedSearchResults({}):
         obj = site.unrestrictedTraverse(brain.getPath())

@@ -106,8 +106,8 @@ class TestSubscribers(FunctionalTestCase):
     @staticuid()
     def test_moving_objects(self):
         self.grant('Manager')
-        source = create(Builder('folder').titled('Source'))
-        target = create(Builder('folder').titled('Target'))
+        source = create(Builder('folder').titled(u'Source'))
+        target = create(Builder('folder').titled(u'Target'))
         doc = create(Builder('document').within(source))
 
         clipboard = source.manage_cutObjects(doc.getId())
@@ -140,8 +140,8 @@ class TestSubscribers(FunctionalTestCase):
         type_to_modified = self.layer['portal'].portal_types.get('Plone Site')
         type_to_modified.allowed_content_types = ('Document',)
 
-        source = create(Builder('document').titled('Source'))
-        target = create(Builder('folder').titled('Target'))
+        source = create(Builder('document').titled(u'Source'))
+        target = create(Builder('folder').titled(u'Target'))
 
         clipboard = source.manage_cutObjects(source.getId())
         target.manage_pasteObjects(clipboard)
@@ -171,9 +171,9 @@ class TestSubscribers(FunctionalTestCase):
         type_to_modified = self.layer['portal'].portal_types.get('Plone Site')
         type_to_modified.allowed_content_types = ('Document',)
 
-        source = create(Builder('folder').titled('Source'))
+        source = create(Builder('folder').titled(u'Source'))
         doc = create(Builder('document').within(source))
-        target = create(Builder('folder').titled('Target'))
+        target = create(Builder('folder').titled(u'Target'))
 
         clipboard = source.manage_cutObjects(doc.getId())
         target.manage_pasteObjects(clipboard)

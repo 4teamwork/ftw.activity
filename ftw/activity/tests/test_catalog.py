@@ -30,7 +30,7 @@ class TestCatalog(TestCase):
 
     @staticuid()
     def test_add_activity(self):
-        document = create(Builder('document').titled('The Document'))
+        document = create(Builder('document').titled(u'The Document'))
         with freeze(datetime(2010, 12, 25, 13, 30)):
             record_id = object_added(document)
         record = get_activity_soup().get(record_id)
@@ -48,7 +48,7 @@ class TestCatalog(TestCase):
 
     @staticuid()
     def test_changed_activity(self):
-        document = create(Builder('document').titled('The Document'))
+        document = create(Builder('document').titled(u'The Document'))
         with freeze(datetime(2010, 12, 25, 13, 30)):
             record_id = object_changed(document)
         record = get_activity_soup().get(record_id)
@@ -66,7 +66,7 @@ class TestCatalog(TestCase):
 
     @staticuid()
     def test_deleted_activity(self):
-        document = create(Builder('document').titled('The Document'))
+        document = create(Builder('document').titled(u'The Document'))
         with freeze(datetime(2010, 12, 25, 13, 30)):
             record_id = object_deleted(document)
         record = get_activity_soup().get(record_id)
@@ -106,8 +106,8 @@ class TestCatalog(TestCase):
     def test_querying_by_path(self):
         soup = get_activity_soup()
         folder = create(Builder('folder'))
-        doc1 = create(Builder('document').titled('One').within(folder))
-        doc2 = create(Builder('document').titled('Two'))
+        doc1 = create(Builder('document').titled(u'One').within(folder))
+        doc2 = create(Builder('document').titled(u'Two'))
 
         soup.clear()
         map(object_added, (folder, doc1, doc2))
@@ -121,11 +121,11 @@ class TestCatalog(TestCase):
     def test_view_permission_is_required(self):
         self.layer['portal'].manage_permission('View', ['Reader', 'Manager'])
         folder = create(Builder('folder'))
-        create(Builder('page').titled('Not visible').within(folder))
+        create(Builder('page').titled(u'Not visible').within(folder))
 
         user = create(Builder('user')
                       .with_roles('Reader', 'Contributor', on=folder))
-        create(Builder('page').titled('Visible').within(folder))
+        create(Builder('page').titled(u'Visible').within(folder))
 
         login(self.layer['portal'], user.getId())
 
@@ -135,7 +135,7 @@ class TestCatalog(TestCase):
 
     @staticuid()
     def test_comment_added_activity(self):
-        document = create(Builder('document').titled('The Document'))
+        document = create(Builder('document').titled(u'The Document'))
         conversation = IConversation(document)
 
         comment = createObject('plone.Comment')
@@ -162,7 +162,7 @@ class TestCatalog(TestCase):
 
     @staticuid()
     def test_comment_removed_activity(self):
-        document = create(Builder('document').titled('The Document'))
+        document = create(Builder('document').titled(u'The Document'))
         conversation = IConversation(document)
 
         comment = createObject('plone.Comment')

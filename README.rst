@@ -220,6 +220,13 @@ The ``@@local-activity`` view is available on any context and shows only activit
 of the current context but not its children.
 
 
+Hint about Plone 5.1 testing using ftw.testing.freeze
+=====================================================
+For some reason there is a transaction.commit() required right before using freeze (contextmanager).
+Details might be found in https://github.com/plone/plone.restapi/pull/747
+I think it's a similar problem and maybe the transaction.commit() right before using the freeze contextmanager might circumvent the issues accidentally.
+
+
 Links
 =====
 

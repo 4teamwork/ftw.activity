@@ -1,6 +1,5 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
-from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from ftw.activity.catalog import comment_added
 from ftw.activity.catalog import comment_removed
 from ftw.activity.catalog import object_added
@@ -8,7 +7,9 @@ from ftw.activity.catalog import object_changed
 from ftw.activity.catalog import object_deleted
 from ftw.activity.catalog import object_moved
 from ftw.activity.catalog import object_transition
+from ftw.activity.utils import IS_PLONE_5
 from plone.uuid.interfaces import IUUID
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from zope.component.hooks import getSite
 
 
@@ -19,6 +20,11 @@ def is_supported(context):
 
 
 def make_object_added_activity(context, event):
+    is_cloned = event.__class__.__name__ == 'ObjectClonedEvent'
+
+    if IS_PLONE_5 and is_cloned:
+        return None
+
     if not is_supported(context) or IPloneSiteRoot.providedBy(event.object):
         return None
 
@@ -26,7 +32,10 @@ def make_object_added_activity(context, event):
 
 
 def make_object_changed_activity(context, event):
-    if not aq_parent(aq_inner(context)) or not is_supported(context):
+    in_aqcuisition = aq_parent(aq_inner(context))
+    # Move/rename triggers a container modified change event.
+    is_container_modified = event.__class__.__name__ == 'ContainerModifiedEvent'
+    if not in_aqcuisition or is_container_modified or not is_supported(context):
         return
 
     object_changed(context)
