@@ -16,6 +16,8 @@
     <i18n:registerTranslations directory="locales" />
     <meta:provides feature="ftw-activity-2" />
 
+    <include file="resources.zcml" />
+
     <include package=".browser" />
     <include package=".catalog" />
     <include package=".portlets" />

@@ -1,0 +1,53 @@
+.activity {
+  .event {
+    padding: 1em;
+
+    &:hover {
+      background-color: #EDF6F7;
+    }
+
+    .avatar {
+      float: left;
+      padding-right: .4em;
+    }
+
+    .title {
+      font-weight: bold;
+      font-size: 17pt;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    img {
+      border: 1px solid #EEE;
+    }
+  }
+
+  a.more-button {
+    display: block;
+    text-align: center;
+    padding: .5em;
+    border: 1px solid #DDD;
+    background-color: #EEE;
+    border-radius: .4em;
+
+    &:hover {
+      background-color: #DEF;
+      border-color: #ABC;
+    }
+  }
+}
+
+// Portlet
+.portletActivity .event {
+  margin-bottom: 1em;
+
+  .avatar {
+    float: left;
+    padding-right: .4em;
+  }
+}
+
+// End Portlet

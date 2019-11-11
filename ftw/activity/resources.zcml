@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:theme="http://namespaces.zope.org/ftw.theming"
+    i18n_domain="ftw.activity">
+
+    <include package="ftw.theming" />
+
+    <browser:resourceDirectory name="ftw.activity" directory="resources" />
+
+    <theme:resources profile="ftw.activity:default" slot="addon">
+        <theme:scss file="resources/activity.scss" />
+    </theme:resources>
+
+</configure>
