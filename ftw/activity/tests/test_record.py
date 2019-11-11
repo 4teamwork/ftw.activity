@@ -12,7 +12,7 @@ from ftw.testing import freeze
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from Products.CMFCore.utils import getToolByName
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.component import getSiteManager
 
 

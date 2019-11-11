@@ -1,7 +1,7 @@
 from ftw.activity.catalog.locator import ANNOTATION_KEY
 from ftw.testing.genericsetup import apply_generic_setup_layer
 from ftw.testing.genericsetup import GenericSetupUninstallMixin
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.annotation.interfaces import IAnnotations
 
 

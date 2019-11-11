@@ -4,7 +4,7 @@ from ftw.builder import Builder
 from ftw.builder import create
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
-from unittest2 import TestCase
+from unittest import TestCase
 
 
 class TestUIDCheck(TestCase):
