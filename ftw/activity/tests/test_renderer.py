@@ -1,6 +1,6 @@
 from ftw.activity.browser.renderer import DefaultRenderer
 from ftw.activity.interfaces import IActivityRenderer
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.interface.verify import verifyClass
 
 
