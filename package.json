@@ -1,0 +1,17 @@
+{
+  "name": "ftw.activity",
+  "version": "1.0.0",
+  "repository": "git@github.com:4teamwork/ftw.activity.git",
+  "author": "4teamwork AG <info@4teamwork.ch>",
+  "license": "GPL2",
+  "scripts": {
+    "build": "r.js -o build.js",
+    "build-js": "r.js -o build.js",
+    "watch": "chokidar \"./ftw/activity/resources/*.js\" -i \"**/*-compiled.js\" -c \"r.js -o build.js;\""
+  },
+  "private": true,
+  "devDependencies": {
+    "chokidar-cli": "^2.1.0",
+    "requirejs": "^2.3.6"
+  }
+}
