@@ -1,6 +1,11 @@
 <registry>
+    <records prefix="plone.resources/ftwactivity_resource"
+             interface="Products.CMFPlone.interfaces.IResourceRegistry"
+             remove="True"/>
+
     <records prefix="plone.bundles/ftw-activity-resources"
              interface="Products.CMFPlone.interfaces.IBundleRegistry">
+        <value key="resources" purge="True"></value>
         <value key="enabled">True</value>
         <value key="depends">plone</value>
         <value key="stub_js_modules">jquery</value>
