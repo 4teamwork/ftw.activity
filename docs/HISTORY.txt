@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.5.1 (unreleased)
+2.5.1 (2019-12-14)
 ------------------
 
 - Provide precompiled bundle. [tinagerber]
