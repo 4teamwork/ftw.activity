@@ -63,14 +63,6 @@ class TestActivityView(FunctionalTestCase):
             self.assertEquals(folder.absolute_url(), folder_event.url)
 
     @browsing
-    def test_editable_border_is_hidden(self, browser):
-        self.grant('Manager')
-        browser.login().visit(view='activity')
-        self.assertEquals('activity', plone.view())
-        self.assertFalse(browser.css('.documentEditable'),
-                         'Editable border is visible')
-
-    @browsing
     def test_raw_action_is_public(self, browser):
         self.grant('Manager')
         create(Builder('folder'))

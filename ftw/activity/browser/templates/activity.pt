@@ -3,12 +3,6 @@
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="ftw.activity">
 
-  <head>
-    <metal:block fill-slot="top_slot"
-                 tal:define="standard_view here/@@plone_context_state/is_view_template;
-                             dummy python:standard_view or request.set('disable_border',1)" />
-  </head>
-
   <body>
     <metal:main fill-slot="main">
       <tal:RAW tal:replace="structure view/raw" />
